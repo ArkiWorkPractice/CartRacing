@@ -2,7 +2,7 @@
 
 namespace CarModule
 {
-    public class Car : MonoBehaviour
+    public class Damageable : MonoBehaviour
     {
         
     }

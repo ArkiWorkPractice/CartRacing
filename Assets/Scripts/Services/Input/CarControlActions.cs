@@ -44,6 +44,24 @@ public partial class @CarControlActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""direction"",
+                    ""type"": ""Value"",
+                    ""id"": ""29eb1d2b-f9a9-4386-855f-2aeb6edfaf7a"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""turn"",
+                    ""type"": ""Value"",
+                    ""id"": ""d4b82f2c-b231-47bf-b935-291b7800b645"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -112,6 +130,72 @@ public partial class @CarControlActions: IInputActionCollection2, IDisposable
                     ""action"": ""handbrake"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""keyboard"",
+                    ""id"": ""47782f30-24d6-4658-8e1d-801c53caf9e4"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""direction"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""cc8fa479-841a-4ac9-b80d-c1072eb87f8e"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""direction"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""50ec8e4d-a69e-4021-8291-64bbeefade80"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""direction"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""1D Axis"",
+                    ""id"": ""91e9bfe7-f224-49fe-bbf7-7b9f7ce41f19"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""turn"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""Positive"",
+                    ""id"": ""6c6b9777-4c7d-43bb-bad6-b4a758d781c6"",
+                    ""path"": ""<Keyboard>/d"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""turn"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""Negative"",
+                    ""id"": ""7609cbc1-d0c0-4e11-b19c-ce12e7d34714"",
+                    ""path"": ""<Keyboard>/a"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""turn"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         }
@@ -122,6 +206,8 @@ public partial class @CarControlActions: IInputActionCollection2, IDisposable
         m_player = asset.FindActionMap("player", throwIfNotFound: true);
         m_player_move = m_player.FindAction("move", throwIfNotFound: true);
         m_player_handbrake = m_player.FindAction("handbrake", throwIfNotFound: true);
+        m_player_direction = m_player.FindAction("direction", throwIfNotFound: true);
+        m_player_turn = m_player.FindAction("turn", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -185,12 +271,16 @@ public partial class @CarControlActions: IInputActionCollection2, IDisposable
     private List<IPlayerActions> m_PlayerActionsCallbackInterfaces = new List<IPlayerActions>();
     private readonly InputAction m_player_move;
     private readonly InputAction m_player_handbrake;
+    private readonly InputAction m_player_direction;
+    private readonly InputAction m_player_turn;
     public struct PlayerActions
     {
         private @CarControlActions m_Wrapper;
         public PlayerActions(@CarControlActions wrapper) { m_Wrapper = wrapper; }
         public InputAction @move => m_Wrapper.m_player_move;
         public InputAction @handbrake => m_Wrapper.m_player_handbrake;
+        public InputAction @direction => m_Wrapper.m_player_direction;
+        public InputAction @turn => m_Wrapper.m_player_turn;
         public InputActionMap Get() { return m_Wrapper.m_player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -206,6 +296,12 @@ public partial class @CarControlActions: IInputActionCollection2, IDisposable
             @handbrake.started += instance.OnHandbrake;
             @handbrake.performed += instance.OnHandbrake;
             @handbrake.canceled += instance.OnHandbrake;
+            @direction.started += instance.OnDirection;
+            @direction.performed += instance.OnDirection;
+            @direction.canceled += instance.OnDirection;
+            @turn.started += instance.OnTurn;
+            @turn.performed += instance.OnTurn;
+            @turn.canceled += instance.OnTurn;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -216,6 +312,12 @@ public partial class @CarControlActions: IInputActionCollection2, IDisposable
             @handbrake.started -= instance.OnHandbrake;
             @handbrake.performed -= instance.OnHandbrake;
             @handbrake.canceled -= instance.OnHandbrake;
+            @direction.started -= instance.OnDirection;
+            @direction.performed -= instance.OnDirection;
+            @direction.canceled -= instance.OnDirection;
+            @turn.started -= instance.OnTurn;
+            @turn.performed -= instance.OnTurn;
+            @turn.canceled -= instance.OnTurn;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -237,5 +339,7 @@ public partial class @CarControlActions: IInputActionCollection2, IDisposable
     {
         void OnMove(InputAction.CallbackContext context);
         void OnHandbrake(InputAction.CallbackContext context);
+        void OnDirection(InputAction.CallbackContext context);
+        void OnTurn(InputAction.CallbackContext context);
     }
 }

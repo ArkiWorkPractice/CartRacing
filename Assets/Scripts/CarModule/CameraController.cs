@@ -16,7 +16,7 @@ namespace CarModule
         }
  
         public Transform target; // The target Transform to follow
-        public Transform rotationSpace; // If assigned, will use this Transform's rotation as the rotation space instead of the world space. Useful with spherical planets.
+        public Transform rotationTarget; // If assigned, will use this Transform's rotation as the rotation space instead of the world space. Useful with spherical planets.
         public UpdateMode updateMode = UpdateMode.LateUpdate; // When to update the camera?
         public bool lockCursor = true; // If true, the mouse will be locked to screen center and hidden
  
@@ -52,15 +52,15 @@ namespace CarModule
         public float y { get; private set; } // The current y rotation of the camera
         public float distanceTarget { get; private set; } // Get/set distance
  
-        private Vector3 targetDistance, position;
-        private Quaternion rotation = Quaternion.identity;
-        private Vector3 smoothPosition;
-        private Camera cam;
-        private bool fixedFrame;
-        private float fixedDeltaTime;
-        private Quaternion r = Quaternion.identity;
-        private Vector3 lastUp;
-        private float blockedDistance = 10f, blockedDistanceV;
+        private Vector3 _targetDistance, _position;
+        private Quaternion _rotation = Quaternion.identity;
+        private Vector3 _smoothPosition;
+        private Camera _cam;
+        private bool _fixedFrame;
+        private float _fixedDeltaTime;
+        private Quaternion _r = Quaternion.identity;
+        private Vector3 _lastUp;
+        private float _blockedDistance = 10f, _blockedDistanceV;
  
         public void SetAngles(Quaternion rotation)
         {
@@ -83,11 +83,11 @@ namespace CarModule
             y = angles.x;
  
             distanceTarget = distance;
-            smoothPosition = transform.position;
+            _smoothPosition = transform.position;
  
-            cam = GetComponent<Camera>();
+            _cam = GetComponent<Camera>();
  
-            lastUp = rotationSpace != null ? rotationSpace.up : Vector3.up;
+            _lastUp = rotationTarget != null ? rotationTarget.up : Vector3.up;
         }
  
         protected virtual void Update()
@@ -97,8 +97,8 @@ namespace CarModule
  
         protected virtual void FixedUpdate()
         {
-            fixedFrame = true;
-            fixedDeltaTime += Time.deltaTime;
+            _fixedFrame = true;
+            _fixedDeltaTime += Time.deltaTime;
             if (updateMode == UpdateMode.FixedUpdate) UpdateTransform();
         }
  
@@ -108,22 +108,22 @@ namespace CarModule
  
             if (updateMode == UpdateMode.LateUpdate) UpdateTransform();
  
-            if (updateMode == UpdateMode.FixedLateUpdate && fixedFrame)
+            if (updateMode == UpdateMode.FixedLateUpdate && _fixedFrame)
             {
-                UpdateTransform(fixedDeltaTime);
-                fixedDeltaTime = 0f;
-                fixedFrame = false;
+                UpdateTransform(_fixedDeltaTime);
+                _fixedDeltaTime = 0f;
+                _fixedFrame = false;
             }
         }
  
         // Read the user input
         public void UpdateInput()
         {
-            if (!cam.enabled) return;
+            if (!_cam.enabled) return;
  
             // Cursors
             Cursor.lockState = lockCursor ? CursorLockMode.Locked : CursorLockMode.None;
-            Cursor.visible = lockCursor ? false : true;
+            Cursor.visible = !lockCursor;
  
             // Should we rotate the camera?
             bool rotate = rotateAlways || (rotateOnLeftButton && Input.GetMouseButton(0)) || (rotateOnRightButton && Input.GetMouseButton(1)) || (rotateOnMiddleButton && Input.GetMouseButton(2));
@@ -147,17 +147,17 @@ namespace CarModule
  
         public void UpdateTransform(float deltaTime)
         {
-            if (!cam.enabled) return;
+            if (!_cam.enabled) return;
  
             // Rotation
-            rotation = Quaternion.AngleAxis(x, Vector3.up) * Quaternion.AngleAxis(y, Vector3.right);
+            _rotation = Quaternion.AngleAxis(x, Vector3.up) * Quaternion.AngleAxis(y, Vector3.right);
  
-            if (rotationSpace != null)
+            if (rotationTarget != null)
             {
-                r = Quaternion.FromToRotation(lastUp, rotationSpace.up) * r;
-                rotation = r * rotation;
+                _r = Quaternion.FromToRotation(_lastUp, rotationTarget.up) * _r;
+                _rotation = _r * _rotation;
  
-                lastUp = rotationSpace.up;
+                _lastUp = rotationTarget.up;
  
             }
  
@@ -167,32 +167,32 @@ namespace CarModule
                 distance += (distanceTarget - distance) * zoomSpeed * deltaTime;
  
                 // Smooth follow
-                if (!smoothFollow) smoothPosition = target.position;
-                else smoothPosition = Vector3.Lerp(smoothPosition, target.position, deltaTime * followSpeed);
+                if (!smoothFollow) _smoothPosition = target.position;
+                else _smoothPosition = Vector3.Lerp(_smoothPosition, target.position, deltaTime * followSpeed);
  
                 // Position
-                Vector3 t = smoothPosition + rotation * offset;
-                Vector3 f = rotation * -Vector3.forward;
+                Vector3 t = _smoothPosition + _rotation * offset;
+                Vector3 f = _rotation * -Vector3.forward;
  
                 if (blockingLayers != -1)
                 {
                     RaycastHit hit;
                     if (Physics.SphereCast(t - f * blockingOriginOffset, blockingRadius, f, out hit, blockingOriginOffset + distanceTarget - blockingRadius, blockingLayers))
                     {
-                        blockedDistance = Mathf.SmoothDamp(blockedDistance, hit.distance + blockingRadius * (1f - blockedOffset) - blockingOriginOffset, ref blockedDistanceV, blockingSmoothTime);
+                        _blockedDistance = Mathf.SmoothDamp(_blockedDistance, hit.distance + blockingRadius * (1f - blockedOffset) - blockingOriginOffset, ref _blockedDistanceV, blockingSmoothTime);
                     }
-                    else blockedDistance = distanceTarget;
+                    else _blockedDistance = distanceTarget;
  
-                    distance = Mathf.Min(distance, blockedDistance);
+                    distance = Mathf.Min(distance, _blockedDistance);
                 }
  
-                position = t + f * distance;
+                _position = t + f * distance;
  
                 // Translating the camera
-                transform.position = position;
+                transform.position = _position;
             }
  
-            transform.rotation = rotation;
+            transform.rotation = _rotation;
         }
  
         // Zoom input
