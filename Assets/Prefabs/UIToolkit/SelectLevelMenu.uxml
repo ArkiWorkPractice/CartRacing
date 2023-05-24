@@ -1,0 +1,9 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/Prefabs/UIToolkit/MenuStyles.uss?fileID=7433441132597879392&amp;guid=99f43f7a51a86b447aa8ce7ffeb7b751&amp;type=3#MenuStyles" />
+    <ui:VisualElement name="Wrapper">
+        <ui:Button text="Level 1" display-tooltip-when-elided="true" name="Level1Button" class="menu-button" />
+        <ui:Button text="Level 2" display-tooltip-when-elided="true" name="Level2Button" class="menu-button" />
+        <ui:Button text="Level 3" display-tooltip-when-elided="true" name="Level3Button" class="menu-button" />
+        <ui:Button text="Back" display-tooltip-when-elided="true" name="BackToMenuButton" class="menu-button" />
+    </ui:VisualElement>
+</ui:UXML>
