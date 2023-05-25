@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 35658342}
   - component: {fileID: 35658341}
   - component: {fileID: 35658345}
+  - component: {fileID: 1928936429}
   m_Layer: 0
   m_Name: Camera
   m_TagString: MainCamera
@@ -92,7 +93,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 35658340}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: eb759f9dc04145eba93135066d1f9c71, type: 3}
   m_Name: 
@@ -123,6 +124,23 @@ MonoBehaviour:
   blockingSmoothTime: 0.1
   blockingOriginOffset: 0
   blockedOffset: 0.5
+--- !u!114 &1928936429
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 35658340}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9aead4c2063d48b28c7a30f2ce19e785, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 5900104410930233574}
+  targetRigidbody: {fileID: 1513440064929857279}
+  offset: {x: 0, y: 5, z: -4}
+  turnAngleMultiplier: 5
+  cameraSpeed: 5
 --- !u!1 &313237289192623417
 GameObject:
   m_ObjectHideFlags: 0
