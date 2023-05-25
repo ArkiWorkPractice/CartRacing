@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using ServiceLocatorModule;
 using Services.Input;
 using TMPro;
 using UnityEngine;
 
-namespace CarModule
+namespace CarModule.CarControl
 {
+    [RequireComponent(typeof(Rigidbody))]
+
     public class CarController : MonoBehaviour
     {
         [SerializeField] private TextMeshProUGUI speedText;
@@ -31,7 +32,7 @@ namespace CarModule
         
         // additional services
         private InputService _input;
-        private Rigidbody _rigidbody;
+        [SerializeField] private Rigidbody carRigidbody;
         private Coroutine _gainSpeedCoroutine;
         private Coroutine _decreaseSpeedCoroutine;
         private int _carSpeed;
@@ -42,8 +43,8 @@ namespace CarModule
             _input.HandbrakeStateChanged += OnHandbrakeSwitched;
             _input.DirectionChanged += OnDirectionChanged;
             
-            _rigidbody = GetComponent<Rigidbody>();
-            _rigidbody.centerOfMass = centerOfMass.position;
+            carRigidbody = GetComponent<Rigidbody>();
+            carRigidbody.centerOfMass = centerOfMass.position;
 
             _stepAtChangingSpeed =
                 Convert.ToInt32(maxMotorTorque / (accelerationTime / OneStepTimeWaitAtDelayAcceleration));
@@ -106,7 +107,7 @@ namespace CarModule
         private void StartMotor(CarAxle axle)
         {
             if (axle.hasMotor ) {
-                if (_rigidbody.velocity.magnitude > maxSpeed || axles[0].leftWheelCollider.rpm > 7000)
+                if (carRigidbody.velocity.magnitude > maxSpeed || axles[0].leftWheelCollider.rpm > 7000)
                 {
                     axle.leftWheelCollider.motorTorque = 0;
                     axle.rightWheelCollider.motorTorque = 0;
@@ -153,7 +154,7 @@ namespace CarModule
         {
             _carSpeed = Convert.ToInt32(Math.Abs((2 * Mathf.PI * axles[0].leftWheelCollider.radius * axles[0].leftWheelCollider.rpm * 60) / 1000));
             speedText.text = $"Speed: {_carSpeed}";
-            speedText.text += $"\nTrue Speed: {Convert.ToInt32(_rigidbody.velocity.magnitude)}";
+            speedText.text += $"\nTrue Speed: {Convert.ToInt32(carRigidbody.velocity.magnitude)}";
             speedText.text += $"\nrpm: {axles[0].leftWheelCollider.rpm}";
         }
 
@@ -196,7 +197,6 @@ namespace CarModule
                 yield return new WaitForSeconds(OneStepTimeWaitAtDelayAcceleration);
 
                 _currentMotorTorque += _stepAtChangingSpeed;
-
             }
         }
     }
