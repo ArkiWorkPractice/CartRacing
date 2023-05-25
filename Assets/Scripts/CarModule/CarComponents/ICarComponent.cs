@@ -1,6 +1,6 @@
-﻿namespace CarModule.Components
+﻿namespace CarModule.CarComponents
 {
-    public class ICarComponent
+    public interface ICarComponent
     {
         
     }

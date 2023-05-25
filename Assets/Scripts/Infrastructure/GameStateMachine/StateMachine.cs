@@ -19,7 +19,7 @@ namespace Infrastructure.GameStateMachine
             };
         }
 
-        public void EnterState<T>() where T : IState
+        public void Enter<T>() where T : IState
         {
             _currentState?.Exit();
             IState state = _states[typeof(T)];

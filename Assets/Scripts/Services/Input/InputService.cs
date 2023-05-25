@@ -1,23 +1,41 @@
 using System;
-using UnityEngine;
+using ServiceLocatorModule.Interfaces;
 using UnityEngine.InputSystem;
 
 namespace Services.Input
 {
-    public class InputService : IDisposable
+    public class InputService : IDisposable, IService
     {
-        private readonly CarControlActions _actions;
+        private readonly ControlActions _actions;
 
         private float _direction;
         private float _turn;
         
         public event Action<bool> HandbrakeStateChanged;
         public event Action<bool> DirectionChanged;
+        public event Action EscapePressed;
         
         public InputService()
         {
-            _actions = new CarControlActions();
+            _actions = new ControlActions();
             _actions.Enable();
+
+            SubscribePlayerInputs();
+            SubscribeUIInputs();
+        }
+
+        private void SubscribeUIInputs()
+        {
+            _actions.ui.escape.performed += OnEscapePerformed;
+        }
+
+        private void OnEscapePerformed(InputAction.CallbackContext obj)
+        {
+            EscapePressed?.Invoke();
+        }
+
+        private void SubscribePlayerInputs()
+        {
             _actions.player.direction.performed += OnDirectionPerformed;
             _actions.player.direction.canceled += OnDirectionCanceled;
             

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using ServiceLocatorModule;
 using Services.Input;
 using TMPro;
 using UnityEngine;
@@ -37,7 +38,7 @@ namespace CarModule
 
         private void Start()
         {
-            _input = new InputService();
+            _input = ServiceLocator.Instance.GetService<InputService>();
             _input.HandbrakeStateChanged += OnHandbrakeSwitched;
             _input.DirectionChanged += OnDirectionChanged;
             
@@ -47,15 +48,6 @@ namespace CarModule
             _stepAtChangingSpeed =
                 Convert.ToInt32(maxMotorTorque / (accelerationTime / OneStepTimeWaitAtDelayAcceleration));
         }
-
-        private void AddSubstepsToWheels()
-        {
-            foreach (var axle in axles)
-            {
-                //axle.leftWheelCollider.ConfigureVehicleSubsteps();
-            }
-        }
-        
 
         private void OnHandbrakeSwitched(bool handbrakeActive)
         {
@@ -89,20 +81,16 @@ namespace CarModule
         private void FixedUpdate()
         {
             MoveWheelColliders();
-            
-            _carSpeed = Convert.ToInt32(Math.Abs((2 * Mathf.PI * axles[0].leftWheelCollider.radius * axles[0].leftWheelCollider.rpm * 60) / 1000));
         }
 
         private void MoveWheelColliders()
         {
             foreach (var axle in axles)
             {
-               
                 Steer(axle);
                 StartMotor(axle);
                 ActivateHandbrake(axle);
             }
-            
         }
 
         private void Steer(CarAxle axle)
@@ -163,36 +151,45 @@ namespace CarModule
 
         private void ShowInfo()
         {
+            _carSpeed = Convert.ToInt32(Math.Abs((2 * Mathf.PI * axles[0].leftWheelCollider.radius * axles[0].leftWheelCollider.rpm * 60) / 1000));
             speedText.text = $"Speed: {_carSpeed}";
             speedText.text += $"\nTrue Speed: {Convert.ToInt32(_rigidbody.velocity.magnitude)}";
             speedText.text += $"\nrpm: {axles[0].leftWheelCollider.rpm}";
-            
         }
-        
-        private IEnumerator DecreaseSpeed()
+
+        private void AddResistanceForce()
         {
             foreach (var axle in axles)
             {
                 axle.leftWheelCollider.brakeTorque = ResistanceForce;
                 axle.rightWheelCollider.brakeTorque = ResistanceForce;
             }
-
-            while (_currentMotorTorque > 0)
-            {
-                yield return new WaitForSeconds(OneStepTimeWaitAtDelayAcceleration);
-
-                _currentMotorTorque -= _stepAtChangingSpeed;
-
-            }
         }
-        
-        private IEnumerator GainSpeed()
+
+        private void StopBrake()
         {
             foreach (var axle in axles)
             {
                 axle.leftWheelCollider.brakeTorque = 0;
                 axle.rightWheelCollider.brakeTorque = 0;
             }
+        }
+        
+        private IEnumerator DecreaseSpeed()
+        {
+            AddResistanceForce();
+
+            while (_currentMotorTorque > 0)
+            {
+                yield return new WaitForSeconds(OneStepTimeWaitAtDelayAcceleration);
+
+                _currentMotorTorque -= _stepAtChangingSpeed;
+            }
+        }
+        
+        private IEnumerator GainSpeed()
+        {
+            StopBrake();
             
             while (_currentMotorTorque < maxMotorTorque)
             {
