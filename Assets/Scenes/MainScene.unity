@@ -365,5 +365,6 @@ MonoBehaviour:
   pauseAsset: {fileID: 9197481963319205126, guid: f05b8e76b1f6cdc4f8d0db8e75c59f6a, type: 3}
   endGameAsset: {fileID: 9197481963319205126, guid: 59a7e3760debf9149acc717c397a9b72, type: 3}
   mainMenuAsset: {fileID: 9197481963319205126, guid: dc1459d61af9bcc46aa9a0ffe851cfda, type: 3}
+  playerHudAsset: {fileID: 9197481963319205126, guid: ad39e17e7bdb8ac478806cad16fdff34, type: 3}
   mainMenuItemsAsset: {fileID: 9197481963319205126, guid: d0cf32d5bfff5654a80bcb98dfcf0d25, type: 3}
   selectLevelAsset: {fileID: 9197481963319205126, guid: dea9a506b4f4c114690effb61fb9151e, type: 3}

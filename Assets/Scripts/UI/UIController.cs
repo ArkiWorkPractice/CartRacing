@@ -9,9 +9,11 @@ namespace UI
     public class UIController : MonoBehaviour, IService
     {
         public event Action<int> OnSelectLevel;
+        public event Action OnLoadMenu;
         public event Action OnRestartLevel;
         public event Action OnResumeLevel;
-        public event Action OnEndLevel;
+        public event Action OnPause;
+        public event Action OnEndGame;
 
         [Header("Game menus")]
         [SerializeField] private VisualTreeAsset pauseAsset;
@@ -21,7 +23,6 @@ namespace UI
         [Header("Main menu components")]
         [SerializeField] private VisualTreeAsset mainMenuItemsAsset;
         [SerializeField] private VisualTreeAsset selectLevelAsset;
-        [SerializeField] private VisualElement v;
 
         private UIDocument _uiDocument;
         private VisualElement _menuWrapperVisualEl;
@@ -46,9 +47,44 @@ namespace UI
             ServiceLocator.Instance.RegisterService<UIController>(this);
         }
 
+        public void MoveToMainMenu()
+        {
+            LoadMainMenu();
+            OnLoadMenu?.Invoke();
+        }
+
+        public void RestartLevel()
+        {
+            LoadPlayerHud();
+            OnRestartLevel?.Invoke();
+        }
+
+        public void ResumeLevel()
+        {
+            LoadPlayerHud();
+            OnResumeLevel?.Invoke();
+        }
+
+        public void LoadPlayerHud()
+        {
+            _uiDocument.visualTreeAsset = playerHudAsset;
+        }
+
+        public void LoadPauseMenu()
+        {
+            _uiDocument.visualTreeAsset = pauseAsset;
+            OnPause?.Invoke();
+        }
+
+        public void LoadEndGameMenu()
+        {
+            _uiDocument.visualTreeAsset = endGameAsset;
+            OnEndGame?.Invoke();
+        }
+
         public void ChangeHealthValue(int newHealthValue)
         {
-            _playerHudVisualEl.Q<Label>($"Health: {newHealthValue}");
+            _playerHudVisualEl.Q<Label>($"HealthValue").text = $"Health: {newHealthValue}";
         }
 
         private void SignMainMenu()
@@ -74,17 +110,17 @@ namespace UI
         {
             _pauseVisualEl = pauseAsset.CloneTree();
 
-            _pauseVisualEl.Q<Button>("ResumeButton").clicked += () => OnResumeLevel?.Invoke();
-            _pauseVisualEl.Q<Button>("RestartButton").clicked += () => OnRestartLevel?.Invoke();
-            _pauseVisualEl.Q<Button>("ExitButton").clicked += () => OnEndLevel?.Invoke();
+            _pauseVisualEl.Q<Button>("ResumeButton").clicked += ResumeLevel;
+            _pauseVisualEl.Q<Button>("RestartButton").clicked += RestartLevel;
+            _pauseVisualEl.Q<Button>("ExitButton").clicked += MoveToMainMenu;
         }
 
         private void SignEndGameMenu()
         {
             _endGameVisualEl = endGameAsset.CloneTree();
 
-            _endGameVisualEl.Q<Button>("RestartButton").clicked += () => OnRestartLevel?.Invoke();
-            _endGameVisualEl.Q<Button>("ExitButton").clicked += () => OnEndLevel?.Invoke();
+            _endGameVisualEl.Q<Button>("RestartButton").clicked += RestartLevel;
+            _endGameVisualEl.Q<Button>("ExitButton").clicked += MoveToMainMenu;
         }
 
         private void LoadMainMenu()
@@ -97,21 +133,6 @@ namespace UI
         {
             _menuWrapperVisualEl.Clear();
             _menuWrapperVisualEl.Add(_selectLevelVisualEl);
-        }
-
-        private void LoadPlayerHud()
-        {
-
-        }
-
-        private void LoadPauseMenu()
-        {
-
-        }
-
-        private void LoadEndGameMenu()
-        {
-
         }
 
         private void Exit()
