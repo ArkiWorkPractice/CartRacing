@@ -1,12 +1,10 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
-    <Style src="project://database/Assets/Prefabs/UIToolkit/MenuStyles.uss?fileID=7433441132597879392&amp;guid=99f43f7a51a86b447aa8ce7ffeb7b751&amp;type=3#MenuStyles" />
-    <ui:VisualElement style="background-color: rgba(0, 0, 0, 0.47); width: 45%; height: 100%; margin-left: 50px;">
-        <ui:VisualElement name="Logo" style="height: 20%;">
-            <ui:Label text="Car Racing" display-tooltip-when-elided="true" style="height: 100%; width: 100%; justify-content: center; align-items: center; -unity-font-style: normal; font-size: 90px; -unity-text-align: middle-center; white-space: nowrap; color: rgb(0, 0, 0); -unity-text-outline-width: 0; text-shadow: 2px 2px 0 rgb(53, 0, 4); -unity-text-outline-color: rgb(0, 0, 0); letter-spacing: 2px; word-spacing: 0; -unity-font-definition: url(&apos;project://database/Assets/Prefabs/UIToolkit/Square-Black%20SDF.asset?fileID=11400000&amp;guid=7dccc99780ab472478bb64131e59bda0&amp;type=2#Square-Black SDF&apos;);" />
-        </ui:VisualElement>
-        <ui:VisualElement name="Buttons" style="flex-grow: 1; justify-content: center; align-items: stretch; padding-bottom: 20%; width: auto;">
-            <ui:Button text="Play" display-tooltip-when-elided="true" name="PlayButton" class="menu-button" />
-            <ui:Button text="Exit" display-tooltip-when-elided="true" name="ExitButton" class="menu-button" />
+    <ui:VisualElement name="UIScreen" style="width: 100%; height: 100%;">
+        <ui:VisualElement name="MainMenu" style="padding-bottom: 0; width: 45%; height: 100%; margin-left: 50px; background-color: rgba(0, 0, 0, 0.47);">
+            <ui:VisualElement name="Logo" style="width: 100%; height: 20%;">
+                <ui:Label text="Car Racing" display-tooltip-when-elided="true" style="width: 100%; height: 100%; justify-content: center; align-items: center; -unity-text-align: middle-center; font-size: 90px; -unity-font-definition: url(&apos;project://database/Assets/External/FPSFont/Square-Black%20SDF.asset?fileID=11400000&amp;guid=7dccc99780ab472478bb64131e59bda0&amp;type=2#Square-Black SDF&apos;); color: rgb(0, 0, 0); text-shadow: 2px 2px 0 rgb(54, 0, 5);" />
+            </ui:VisualElement>
+            <ui:VisualElement name="MainMenuItemsWrapper" style="flex-grow: 1; padding-bottom: 20%; -unity-text-align: middle-center; align-items: stretch; justify-content: center;" />
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

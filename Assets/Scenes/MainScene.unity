@@ -311,6 +311,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1941063120}
   - component: {fileID: 1941063119}
+  - component: {fileID: 1941063121}
   m_Layer: 5
   m_Name: UIDocument
   m_TagString: Untagged
@@ -349,3 +350,20 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1941063121
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1941063118}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fac2d02b668bd4645b47c6715f274fe1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pauseAsset: {fileID: 9197481963319205126, guid: f05b8e76b1f6cdc4f8d0db8e75c59f6a, type: 3}
+  endGameAsset: {fileID: 9197481963319205126, guid: 59a7e3760debf9149acc717c397a9b72, type: 3}
+  mainMenuAsset: {fileID: 9197481963319205126, guid: dc1459d61af9bcc46aa9a0ffe851cfda, type: 3}
+  mainMenuItemsAsset: {fileID: 9197481963319205126, guid: d0cf32d5bfff5654a80bcb98dfcf0d25, type: 3}
+  selectLevelAsset: {fileID: 9197481963319205126, guid: dea9a506b4f4c114690effb61fb9151e, type: 3}
