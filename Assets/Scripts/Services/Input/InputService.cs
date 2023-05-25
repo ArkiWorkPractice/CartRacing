@@ -1,12 +1,14 @@
 using System;
+using ServiceLocatorModule;
 using ServiceLocatorModule.Interfaces;
+using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace Services.Input
 {
-    public class InputService : IDisposable, IService
+    public class InputService : MonoBehaviour, IDisposable, IService
     {
-        private readonly ControlActions _actions;
+        private ControlActions _actions;
 
         private float _direction;
         private float _turn;
@@ -14,12 +16,14 @@ namespace Services.Input
         public event Action<bool> HandbrakeStateChanged;
         public event Action<bool> DirectionChanged;
         public event Action EscapePressed;
-        
-        public InputService()
+
+        private void Awake()
         {
             _actions = new ControlActions();
             _actions.Enable();
 
+            ServiceLocator.Instance.RegisterService(this);
+            
             SubscribePlayerInputs();
             SubscribeUIInputs();
         }
@@ -80,9 +84,9 @@ namespace Services.Input
 
         public float GetDirection() => _direction;
         public float GetTurn() => _turn;
-        
 
-        ~InputService()
+
+        private void OnDisable()
         {
             Dispose();
         }

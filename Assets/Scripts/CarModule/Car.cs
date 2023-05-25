@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Threading.Tasks;
 using CarModule.CarComponents;
+using CarModule.CarControl;
 using UnityEngine;
 
 namespace CarModule
 {
     public class Car : MonoBehaviour, IDamageable
     {
-        
+        [SerializeField] private CarConfig carConfig;
         private IDamageable _damageable;
         private Health _health;
         

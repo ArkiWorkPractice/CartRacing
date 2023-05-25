@@ -13,7 +13,7 @@ namespace Infrastructure.GameStateMachine.States
         
         public void Enter()
         {
-            ServiceLocator.Instance.RegisterService(new InputService());
+            
         }
 
         public void Exit()

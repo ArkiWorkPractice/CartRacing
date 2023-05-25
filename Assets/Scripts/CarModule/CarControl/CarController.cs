@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using ServiceLocatorModule;
 using Services.Input;
 using TMPro;
 using UnityEngine;
@@ -39,7 +40,7 @@ namespace CarModule.CarControl
 
         private void Start()
         {
-            _input = new InputService();
+            _input = ServiceLocator.Instance.GetService<InputService>();
             _input.HandbrakeStateChanged += OnHandbrakeSwitched;
             _input.DirectionChanged += OnDirectionChanged;
             
