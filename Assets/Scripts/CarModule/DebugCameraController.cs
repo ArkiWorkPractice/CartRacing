@@ -2,7 +2,7 @@
 
 namespace CarModule
 {
-    public class CameraController : MonoBehaviour
+    public class DebugCameraController : MonoBehaviour
     {
  
         // When to update the camera?

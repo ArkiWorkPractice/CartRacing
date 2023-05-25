@@ -38,7 +38,7 @@ namespace CarModule
 
         private void Start()
         {
-            _input = ServiceLocator.Instance.GetService<InputService>();
+            _input = new InputService();
             _input.HandbrakeStateChanged += OnHandbrakeSwitched;
             _input.DirectionChanged += OnDirectionChanged;
             
