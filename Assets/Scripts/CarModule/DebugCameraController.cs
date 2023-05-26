@@ -4,7 +4,6 @@ namespace CarModule
 {
     public class DebugCameraController : MonoBehaviour
     {
- 
         // When to update the camera?
         [System.Serializable]
         public enum UpdateMode

@@ -1,6 +1,8 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using ServiceLocatorModule;
 using Services.Input;
 using TMPro;
@@ -9,81 +11,222 @@ using UnityEngine;
 namespace CarModule.CarControl
 {
     [RequireComponent(typeof(Rigidbody))]
-
     public class CarController : MonoBehaviour
     {
-        [SerializeField] private TextMeshProUGUI speedText;
-        
+        [SerializeField] private TextMeshProUGUI infoText;
+
         // car config
         [SerializeField] private List<CarAxle> axles;
-        [SerializeField] private float maxMotorTorque = 500;
-        [SerializeField] private float maxSteeringAngle = 30;
+        [SerializeField] private Rigidbody carRigidbody;
         [SerializeField] private Transform centerOfMass;
-        [SerializeField] private float accelerationTime;
-        [SerializeField] private int maxSpeed;
-        
-        private const float OneStepTimeWaitAtDelayAcceleration = 0.1f;
-        private const float HandbrakeForce = Mathf.Infinity;
-        private const float ResistanceForce = 1000;
-        
+        [SerializeField] private AnimationCurve steeringCurve;
+
+        private CarConfig _config;
+
         // calculates
         private float _currentMotorTorque;
         private bool _handbrakeActivated;
         private int _stepAtChangingSpeed;
+        private float _currentSpeed;
+        private float _currentSteeringAngle;
+        private float _currentSlipAngle;
         
+        // input
+        private float _brakeInput;
+        private float _gasInput;
+        private float _turnInput;
+
+        private CancellationTokenSource _cancellationTokenGainMotorTorque;
+        private CancellationTokenSource _cancellationTokenLoseMotorTorque;
+        private CancellationTokenSource _cancellationTokenChangeDirection;
+
         // additional services
         private InputService _input;
-        [SerializeField] private Rigidbody carRigidbody;
         private Coroutine _gainSpeedCoroutine;
         private Coroutine _decreaseSpeedCoroutine;
         private int _carSpeed;
 
+
         private void Start()
         {
             _input = ServiceLocator.Instance.GetService<InputService>();
-            _input.HandbrakeStateChanged += OnHandbrakeSwitched;
+            /*_input.HandbrakeStateChanged += OnHandbrakeSwitched;
             _input.DirectionChanged += OnDirectionChanged;
-            
-            carRigidbody = GetComponent<Rigidbody>();
+            _input.CarMoveCanceled += OnMoveCanceled;*/
+
             carRigidbody.centerOfMass = centerOfMass.position;
 
             _stepAtChangingSpeed =
-                Convert.ToInt32(maxMotorTorque / (accelerationTime / OneStepTimeWaitAtDelayAcceleration));
+                Convert.ToInt32(_config.MaxMotorTorque /
+                                (_config.AccelerationTimeInMilliseconds /
+                                 _config.OneStepTimeWaitAtDelayAccelerationInMilliseconds));
+
+            _cancellationTokenGainMotorTorque = new CancellationTokenSource();
+            _cancellationTokenLoseMotorTorque = new CancellationTokenSource();
+            _cancellationTokenChangeDirection = new CancellationTokenSource();
         }
+
+        private void Update()
+        {
+            _currentSpeed = carRigidbody.velocity.magnitude;
+            CheckInput();
+            UpdateWheelMesh();
+            ShowNewInfo();
+        }
+
+
+        private void FixedUpdate()
+        {
+            ApplyMotorTorque();
+            ApplySteering();
+            ApplyBrake();
+        }
+
+        private void ApplySteering()
+        {
+            _currentSteeringAngle = _turnInput * steeringCurve.Evaluate(_currentSpeed);
+            /*_currentSteeringAngle +=
+                Vector3.SignedAngle(transform.forward, carRigidbody.velocity + transform.forward, Vector3.up);
+            _currentSteeringAngle = Mathf.Clamp(_currentSteeringAngle,-90, 90);*/
+
+            foreach (var axle in axles)
+            {
+                if (axle.canSteer)
+                {
+                    axle.ApplySteering(_currentSteeringAngle);
+                }
+            }
+        }
+
+        private void ApplyBrake()
+        {
+            axles[0].ApplyBrakePower(_brakeInput * _config.HandbrakeForce * 0.7f);
+            axles[1].ApplyBrakePower(_brakeInput * _config.HandbrakeForce * 0.3f);
+        }
+        
+        private void ApplyMotorTorque()
+        {
+            foreach (var axle in axles)
+            {
+                if (axle.hasMotor)
+                {
+                    _currentMotorTorque = _config.MaxMotorTorque * _gasInput;
+                    axle.SetMotorTorque(_currentMotorTorque);
+                }
+            }
+        }
+
+        private void UpdateWheelMesh()
+        {
+            foreach (var axle in axles)
+            {
+                axle.ApplyLocalPositionToVisuals();
+            }
+        }
+        
+        private void CheckInput()
+        {
+            _gasInput = _input.GetDirection();
+            _turnInput = _input.GetTurn();
+
+            var forward = transform.forward;
+            _currentSlipAngle = Vector3.Angle(forward, carRigidbody.velocity - forward);
+            float movingDirection = Vector3.Dot(forward, carRigidbody.velocity);
+            if (movingDirection < -0.5f && _gasInput > 0)
+            {
+                _brakeInput = Mathf.Abs(_gasInput);
+            }
+            else if (movingDirection > 0.5f && _gasInput < 0)
+            {
+                _brakeInput = Mathf.Abs(_gasInput);
+            }
+            else
+            {
+                _brakeInput = 0;
+            }
+
+            if (_gasInput < 0.5 && _gasInput > -0.5)
+            {
+                _brakeInput = 1;
+            }
+            
+            /*_currentSlipAngle = Vector3.Angle(forward, carRigidbody.velocity - forward);
+
+            if (_currentSlipAngle < 120f)
+            {
+                if (_gasInput < 0)
+                {
+                    _brakeInput = Mathf.Abs(_gasInput);
+                    _gasInput = 0;
+                }
+                else
+                {
+                    _brakeInput = 0;
+                }
+            }
+            else
+            {
+                _brakeInput = 0;
+            }*/
+        }
+        
+        private void ShowNewInfo()
+        {
+            StringBuilder info = new StringBuilder();
+            info.Append($"Motor Torque: {_currentMotorTorque}");
+            info.Append($"\nRB speed: {_currentSpeed}");
+            info.Append($"\nSteering: {_currentSteeringAngle}");
+            info.Append($"\nDirection: {_gasInput}");
+
+            infoText.text = info.ToString();
+        }
+        
+        
+        public void Initialize(CarConfig config)
+        {
+            _config = config;
+        }
+
+        
 
         private void OnHandbrakeSwitched(bool handbrakeActive)
         {
             _handbrakeActivated = handbrakeActive;
         }
 
-        private void OnDirectionChanged(bool isMoving)
+        private async void OnDirectionChanged()
         {
-            if (isMoving)
+            float newDirection = _input.GetDirection();
+            if (_gasInput > 0.5 && newDirection < -0.5 || _gasInput < -0.5 && newDirection > 0.5)
             {
-                if (_decreaseSpeedCoroutine != null) StopCoroutine(_decreaseSpeedCoroutine);
-                _gainSpeedCoroutine = StartCoroutine(GainSpeed());
+                _cancellationTokenGainMotorTorque.Cancel(false);
+
+                _cancellationTokenLoseMotorTorque = new CancellationTokenSource();
+                await LoseSpeedAsync(_cancellationTokenLoseMotorTorque.Token);
             }
-            else
-            {
-                if (_gainSpeedCoroutine != null) StopCoroutine(_gainSpeedCoroutine);
-                _decreaseSpeedCoroutine = StartCoroutine(DecreaseSpeed());
-            }
-                
-        }
-        
-        private void Update()
-        {
-            foreach (var axle in axles)
-            {
-               axle.ApplyLocalPositionToVisuals();
-            }
-            ShowInfo();
+
+            _gasInput = _input.GetDirection();
+            _cancellationTokenLoseMotorTorque.Cancel();
+            _cancellationTokenGainMotorTorque = new CancellationTokenSource();
+            await GainSpeedAsync(_cancellationTokenGainMotorTorque.Token);
         }
 
-        private void FixedUpdate()
+
+        private async void OnMoveCanceled()
         {
-            MoveWheelColliders();
+            _gasInput = 0;
+
+            /*_cancellationTokenGainMotorTorque.Cancel(false);
+            
+            _cancellationTokenLoseMotorTorque = new CancellationTokenSource();
+            await LoseSpeedAsync(_cancellationTokenLoseMotorTorque.Token);*/
         }
+
+       
+
+        
+        
+       
 
         private void MoveWheelColliders()
         {
@@ -97,9 +240,10 @@ namespace CarModule.CarControl
 
         private void Steer(CarAxle axle)
         {
-            if (axle.canSteer) {
-                float steering = maxSteeringAngle * _input.GetTurn();
-                   
+            if (axle.canSteer)
+            {
+                float steering = _config.MaxSteeringAngle * _input.GetTurn();
+
                 axle.leftWheelCollider.steerAngle = steering;
                 axle.rightWheelCollider.steerAngle = steering;
             }
@@ -107,15 +251,16 @@ namespace CarModule.CarControl
 
         private void StartMotor(CarAxle axle)
         {
-            if (axle.hasMotor ) {
-                if (carRigidbody.velocity.magnitude > maxSpeed || axles[0].leftWheelCollider.rpm > 7000)
+            if (axle.hasMotor)
+            {
+                if (carRigidbody.velocity.magnitude > _config.MaxSpeed)
                 {
                     axle.leftWheelCollider.motorTorque = 0;
                     axle.rightWheelCollider.motorTorque = 0;
                 }
                 else
                 {
-                    float motor = _currentMotorTorque * _input.GetDirection();
+                    float motor = _currentMotorTorque * _gasInput;
 
                     axle.leftWheelCollider.motorTorque = motor;
                     axle.rightWheelCollider.motorTorque = motor;
@@ -127,13 +272,13 @@ namespace CarModule.CarControl
         {
             if (!axle.hasHandbrake && _handbrakeActivated)
             {
-                axle.leftWheelCollider.brakeTorque = ResistanceForce;
-                axle.rightWheelCollider.brakeTorque = ResistanceForce;
+                axle.leftWheelCollider.brakeTorque = _config.ResistanceForce;
+                axle.rightWheelCollider.brakeTorque = _config.ResistanceForce;
             }
             else if (axle.hasHandbrake && _handbrakeActivated)
             {
-                axle.leftWheelCollider.brakeTorque = HandbrakeForce;
-                axle.rightWheelCollider.brakeTorque = HandbrakeForce;
+                axle.leftWheelCollider.brakeTorque = _config.HandbrakeForce;
+                axle.rightWheelCollider.brakeTorque = _config.HandbrakeForce;
             }
             else if (axle.hasHandbrake && !_handbrakeActivated)
             {
@@ -141,30 +286,27 @@ namespace CarModule.CarControl
                 axle.rightWheelCollider.brakeTorque = 0;
             }
         }
-        
-        private void ApplyLocalPositionToVisuals(Transform wheelTransform, WheelCollider wheelCollider)
-        {
-            wheelCollider.GetWorldPose(out var position, out var rotation);
-
-            wheelTransform.position = position;
-            wheelTransform.rotation = rotation;
-        }
-
 
         private void ShowInfo()
         {
-            _carSpeed = Convert.ToInt32(Math.Abs((2 * Mathf.PI * axles[0].leftWheelCollider.radius * axles[0].leftWheelCollider.rpm * 60) / 1000));
-            speedText.text = $"Speed: {_carSpeed}";
-            speedText.text += $"\nTrue Speed: {Convert.ToInt32(carRigidbody.velocity.magnitude)}";
-            speedText.text += $"\nrpm: {axles[0].leftWheelCollider.rpm}";
+            if (!infoText)
+                return;
+
+            _carSpeed = Convert.ToInt32(Math.Abs(
+                (2 * Mathf.PI * axles[0].leftWheelCollider.radius * axles[0].leftWheelCollider.rpm * 60) / 1000));
+            infoText.text = $"Speed: {_carSpeed}";
+            infoText.text += $"\nTrue Speed: {Convert.ToInt32(carRigidbody.velocity.magnitude)}";
+            infoText.text += $"\nrpm: {axles[0].leftWheelCollider.rpm}";
+            infoText.text += $"\nMotor Torque: {_currentMotorTorque}";
+            infoText.text += $"\nDirection: {_gasInput}";
         }
 
         private void AddResistanceForce()
         {
             foreach (var axle in axles)
             {
-                axle.leftWheelCollider.brakeTorque = ResistanceForce;
-                axle.rightWheelCollider.brakeTorque = ResistanceForce;
+                axle.leftWheelCollider.brakeTorque = _config.ResistanceForce;
+                axle.rightWheelCollider.brakeTorque = _config.ResistanceForce;
             }
         }
 
@@ -176,28 +318,60 @@ namespace CarModule.CarControl
                 axle.rightWheelCollider.brakeTorque = 0;
             }
         }
-        
-        private IEnumerator DecreaseSpeed()
+
+        private async Task GainSpeedAsync(CancellationToken token)
         {
-            AddResistanceForce();
-
-            while (_currentMotorTorque > 0)
+            try
             {
-                yield return new WaitForSeconds(OneStepTimeWaitAtDelayAcceleration);
+                if (token.IsCancellationRequested)
+                    return;
 
-                _currentMotorTorque -= _stepAtChangingSpeed;
+                StopBrake();
+
+                while (!token.IsCancellationRequested && _currentMotorTorque < _config.MaxMotorTorque)
+                {
+                    if (token.IsCancellationRequested)
+                        return;
+
+                    await Task.Delay(_config.OneStepTimeWaitAtDelayAccelerationInMilliseconds, token);
+
+                    if (token.IsCancellationRequested)
+                        return;
+
+                    _currentMotorTorque += _stepAtChangingSpeed;
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.Log(e);
             }
         }
-        
-        private IEnumerator GainSpeed()
-        {
-            StopBrake();
-            
-            while (_currentMotorTorque < maxMotorTorque)
-            {
-                yield return new WaitForSeconds(OneStepTimeWaitAtDelayAcceleration);
 
-                _currentMotorTorque += _stepAtChangingSpeed;
+        private async Task LoseSpeedAsync(CancellationToken token)
+        {
+            try
+            {
+                if (token.IsCancellationRequested)
+                    return;
+
+                StopBrake();
+
+                while (!token.IsCancellationRequested && _currentMotorTorque > 0)
+                {
+                    if (token.IsCancellationRequested)
+                        return;
+
+                    await Task.Delay(_config.OneStepTimeWaitAtDelayAccelerationInMilliseconds, token);
+
+                    if (token.IsCancellationRequested)
+                        return;
+
+                    _currentMotorTorque -= _stepAtChangingSpeed;
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.Log(e);
             }
         }
     }

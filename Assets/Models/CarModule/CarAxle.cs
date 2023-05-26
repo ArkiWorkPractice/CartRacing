@@ -25,5 +25,23 @@ namespace CarModule
             rightWheelTransform.position = position;
             rightWheelTransform.rotation = rotation;
         }
+
+        public void SetMotorTorque(float torque)
+        {
+            leftWheelCollider.motorTorque = torque;
+            rightWheelCollider.motorTorque = torque;
+        }
+
+        public void ApplySteering(float currentSteeringAngle)
+        {
+            leftWheelCollider.steerAngle = currentSteeringAngle;
+            rightWheelCollider.steerAngle = currentSteeringAngle;
+        }
+
+        public void ApplyBrakePower(float configHandbrakeForce)
+        {
+            leftWheelCollider.brakeTorque = configHandbrakeForce;
+            rightWheelCollider.brakeTorque = configHandbrakeForce;
+        }
     }
 }

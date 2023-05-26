@@ -8,18 +8,21 @@ namespace CarModule
 {
     public class Car : MonoBehaviour, IDamageable
     {
-        [SerializeField] private CarConfig carConfig;
+        [SerializeField] private CarConfigSo carConfigSo;
+        [SerializeField] private CarController carController;
+
+        private CarConfig _config;
         private IDamageable _damageable;
         private Health _health;
-        
-        
-        private const int ImmortalTime = 5000; 
-        private const int MaxHealth = 100; 
 
         public void Awake()
         {
+            _config = carConfigSo.GetConfig();
+            
+            _health = new Health(_config.MaxHealth);
             _damageable = new SimpleDamageable(_health);
-            _health = new Health(MaxHealth);
+            
+            carController.Initialize(_config);
         }
 
         public void MakeDamage(int damage)
@@ -33,7 +36,7 @@ namespace CarModule
         {
             _damageable = new NonDamageable();
 
-            await Task.Delay(ImmortalTime);
+            await Task.Delay(_config.ImmortalTimeInMilliseconds);
 
             _damageable = new SimpleDamageable(_health);
         }

@@ -12,23 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2da26e243574fa5b75fcd5d20c8a296, type: 3}
   m_Name: CarConfig
   m_EditorClassIdentifier: 
-  axles:
-  - leftWheelCollider: {fileID: 0}
-    rightWheelCollider: {fileID: 0}
-    leftWheelTransform: {fileID: 0}
-    rightWheelTransform: {fileID: 0}
-    hasMotor: 0
-    canSteer: 0
-    hasHandbrake: 0
-  - leftWheelCollider: {fileID: 0}
-    rightWheelCollider: {fileID: 0}
-    leftWheelTransform: {fileID: 0}
-    rightWheelTransform: {fileID: 0}
-    hasMotor: 0
-    canSteer: 0
-    hasHandbrake: 0
-  maxMotorTorque: 7000
-  maxSteeringAngle: 30
-  centerOfMass: {fileID: 0}
-  accelerationTime: 0
-  maxSpeed: 0
+  carConfig:
+    maxMotorTorque: 10000
+    maxSteeringAngle: 50
+    handbrakeForce: 50000
+    accelerationTimeInMilliseconds: 5000
+    maxSpeed: 120
+    oneStepTimeWaitAtDelayAccelerationInMilliseconds: 100
+    resistanceForce: 200
+    immortalTimeInMilliseconds: 5000
+    maxHealth: 100

@@ -14,7 +14,8 @@ namespace Services.Input
         private float _turn;
         
         public event Action<bool> HandbrakeStateChanged;
-        public event Action<bool> DirectionChanged;
+        public event Action DirectionChanged;
+        public event Action CarMoveCanceled;
         public event Action EscapePressed;
 
         private void Awake()
@@ -58,7 +59,7 @@ namespace Services.Input
         private void OnDirectionCanceled(InputAction.CallbackContext obj)
         {
             _direction = 0;
-            DirectionChanged?.Invoke(false);
+            CarMoveCanceled?.Invoke();
         }
 
         private void OnTurnPerformed(InputAction.CallbackContext obj)
@@ -69,7 +70,7 @@ namespace Services.Input
         private void OnDirectionPerformed(InputAction.CallbackContext obj)
         {
             _direction = obj.ReadValue<float>();
-            DirectionChanged?.Invoke(true);
+            DirectionChanged?.Invoke();
         }
 
         private void OnHandbrakePerformed(InputAction.CallbackContext obj)
