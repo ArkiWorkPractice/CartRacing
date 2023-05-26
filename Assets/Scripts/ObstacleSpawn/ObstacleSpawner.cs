@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using DefaultNamespace;
+using Factory;
+using Obstacles.Abstract;
 using ServiceLocatorModule;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -9,29 +11,75 @@ namespace ObstacleSpawn
 {
     public class ObstacleSpawner : MonoBehaviour
     {
-        [SerializeField] private List<Obstacle> obstacles;
+        private Obstacle[] _obstacles;
         [SerializeField] private ObstacleSpawnPoint[] spawnPoints;
-
-        private void Awake()
-        {
-            spawnPoints = GetComponentsInChildren<ObstacleSpawnPoint>();
-        }
+        [SerializeField] private Transform playerPosition;
+        [SerializeField] private int quantityForOneObject;
+        private ObstacleFactory _obstacleFactory; 
 
         private void Start()
         {
-            obstacles = ServiceLocator.Instance.GetService<PrefabProvider>().GetObstacles();
-            SpawnObstacles();
+            _obstacles = ServiceLocator.Instance.GetService<PrefabProvider>().GetObstacles();
+            _obstacleFactory = new ObstacleFactory(_obstacles,quantityForOneObject);
+            for (int i = 0; i < spawnPoints.Length; i++)
+            {
+                spawnPoints[i].PlayerIsNear += SpawnObstacles;
+                spawnPoints[i].NeedToReturn += RemoveObstacle;
+            }
         }
 
-        public void SpawnObstacles()
+        /*private void CheckDistanceToSpawnPoint()
         {
             for (int i = 0; i < spawnPoints.Length; i++)
             {
-                Obstacle obj = Instantiate(obstacles[Random.Range(0, obstacles.Count)], spawnPoints[i].transform);
-                var rotation = obj.transform.rotation;
-                obj.gameObject.transform.rotation = Quaternion.Euler(rotation.x, Random.Range(0f, 180f), rotation.z);
+                if (!spawnPoints[i].GetSpawnPointStatus() && Vector3.Distance(spawnPoints[i].transform.position, playerPosition.position) < 150f)
+                {
+                     SpawnObstacles(spawnPoints[i]);
+                }
+                else if (spawnPoints[i].GetSpawnPointStatus() && Vector3.Distance(spawnPoints[i].transform.position, playerPosition.position) > 200f)
+                {
+                    RemoveObstacle(spawnPoints[i]);
+                }
             }
+        }*/
+
+        /*private void Update()
+        {
+            CheckDistanceToSpawnPoint();
+        }*/
+
+        private bool CheckSpawnPointDamageLimits(Obstacle obstacle, ObstacleSpawnPoint spawnPoint)
+        {
+            var damageLimit = spawnPoint.GetDamageLimit();
+            if (obstacle.GetDamage() >= damageLimit.Item1 && obstacle.GetDamage() <= damageLimit.Item2)
+            {
+                return true;
+            }
+
+            return false;
         }
-        
+
+        private void SpawnObstacles(ObstacleSpawnPoint spawnPoint)
+        {
+            if (spawnPoint.GetSpawnPointStatus())
+            {
+                return;
+            }
+            int randomObstacleIndex = Random.Range(0, _obstacles.Length);
+
+            while (!CheckSpawnPointDamageLimits(_obstacles[randomObstacleIndex], spawnPoint))
+            {
+                randomObstacleIndex = Random.Range(0, _obstacles.Length);
+            }
+
+            spawnPoint.ChangeActiveStatus();
+            _obstacleFactory.Create(randomObstacleIndex,spawnPoint);
+        }
+
+        private void RemoveObstacle(ObstacleSpawnPoint spawnPoint)
+        {
+            _obstacleFactory.ReturnToObjectPool(spawnPoint.GetObstacleOnPoint());
+            spawnPoint.RemoveobstacleOnPoint();
+        }
     }
 }

@@ -12,8 +12,8 @@ GameObject:
   - component: {fileID: 1990293589768602420}
   - component: {fileID: 1990293589769715444}
   - component: {fileID: 1990293589875995056}
-  - component: {fileID: -6679138119755986785}
   - component: {fileID: -7221845914647275628}
+  - component: {fileID: 3968279383252012857}
   m_Layer: 7
   m_Name: Prop_Barrier02
   m_TagString: Untagged
@@ -100,20 +100,6 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: 78056cefff7010745ae502ceee2d13e2, type: 3}
---- !u!114 &-6679138119755986785
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1990293589767515956}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 031b57ca36ff43c99f08038b5ee61e71, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  damageAmount: 15
-  isDestroyable: 1
 --- !u!54 &-7221845914647275628
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -130,3 +116,17 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &3968279383252012857
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1990293589767515956}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98ef775a04a5404593a052b84209881d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damageAmount: 20
+  isDestroyable: 0

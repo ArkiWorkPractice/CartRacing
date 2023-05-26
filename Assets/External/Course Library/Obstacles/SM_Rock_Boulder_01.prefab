@@ -12,8 +12,8 @@ GameObject:
   - component: {fileID: 5924013827781158165}
   - component: {fileID: 5924013827781158166}
   - component: {fileID: -2048965254274166366}
-  - component: {fileID: -7195676802441214232}
   - component: {fileID: -4201615126586805369}
+  - component: {fileID: 3789110961583308421}
   m_Layer: 7
   m_Name: SM_Rock_Boulder_01
   m_TagString: Untagged
@@ -97,22 +97,8 @@ SphereCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 1.3325522
-  m_Center: {x: 0, y: -0.000000059604645, z: 0}
---- !u!114 &-7195676802441214232
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5924013827781158161}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fde0eabe85d64a4ea294abdb997095b2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  damageAmount: 50
-  isDestroyable: 0
+  m_Radius: 1.0036654
+  m_Center: {x: 0.06694579, y: 0.22655872, z: -0.09032667}
 --- !u!54 &-4201615126586805369
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -127,5 +113,19 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 112
   m_CollisionDetection: 0
+--- !u!114 &3789110961583308421
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5924013827781158161}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5932ceb30a245faa42fd086ec7c4ebd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damageAmount: 50
+  isDestroyable: 0
