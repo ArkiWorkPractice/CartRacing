@@ -1,141 +1,96 @@
-using System;
 using UnityEngine;
 using UnityEngine.UIElements;
 using ServiceLocatorModule;
+using EventBusModule;
+using EventBusModule.Interfaces;
 using ServiceLocatorModule.Interfaces;
 
 namespace UI
 {
     public class UIController : MonoBehaviour, IService
     {
-        public event Action<int> OnSelectLevel;
-        public event Action OnLoadMenu;
-        public event Action OnRestartLevel;
-        public event Action OnResumeLevel;
-        public event Action OnPause;
-        public event Action OnEndGame;
-
         [Header("Game menus")]
+        [SerializeField] private VisualTreeAsset mainMenuAsset;
+        [SerializeField] private VisualTreeAsset selectLevelMenuAsset;
         [SerializeField] private VisualTreeAsset pauseAsset;
         [SerializeField] private VisualTreeAsset endGameAsset;
-        [SerializeField] private VisualTreeAsset mainMenuAsset;
         [SerializeField] private VisualTreeAsset playerHudAsset;
-        [Header("Main menu components")]
-        [SerializeField] private VisualTreeAsset mainMenuItemsAsset;
-        [SerializeField] private VisualTreeAsset selectLevelAsset;
 
         private UIDocument _uiDocument;
-        private VisualElement _menuWrapperVisualEl;
-        private VisualElement _mainMenuVisualEl;
-        private VisualElement _selectLevelVisualEl;
-        private VisualElement _playerHudVisualEl;
-        private VisualElement _pauseVisualEl;
-        private VisualElement _endGameVisualEl;
+        private EventBus _eventBus;
 
         private void Awake()
         {
+            ServiceLocator.Instance.RegisterService(this);
+        }
+
+        public void Initialize()
+        {
             _uiDocument = GetComponent<UIDocument>();
-            _menuWrapperVisualEl = _uiDocument.rootVisualElement.Q<VisualElement>("MainMenuItemsWrapper");
+            _eventBus = ServiceLocator.Instance.GetService<EventBus>();
+            _eventBus.Subscribe<EventBusEventArgs>("OnStartGame", LoadMainMenu);
 
-            SignMainMenu();
-            SignPlayerHud();
-            SignPauseMenu();
-            SignEndGameMenu();
-
-            LoadMainMenu();
-
-            ServiceLocator.Instance.RegisterService<UIController>(this);
+            _eventBus.Subscribe<EventBusEventArgs>("OnLoadSelectLevel", LoadSelectLevelMenu);
+            _eventBus.Subscribe<EventBusEventArgs>("OnExit", Exit);
+            _eventBus.Subscribe<EventBusEventArgs>("OnLoadMainMenu", LoadMainMenu);
+            _eventBus.Subscribe<EventBusEventArgs>("OnPauseGame", LoadPauseMenu);
+            _eventBus.Subscribe<EventBusEventArgs>("OnEndGame", LoadEndGameMenu);
+            _eventBus.Subscribe<EventBusEventArgs>("OnStartRace", LoadPlayerHud);
+            _eventBus.Subscribe<EventBusEventArgs>("OnResumeGame", LoadPlayerHud);
+            _eventBus.Subscribe<EventBusEventArgs>("OnRestartGame", LoadPlayerHud);
+            _eventBus.Subscribe<SingleIntParameterEventBusEventArgs>("OnUpdateHealthValue", UpdateHealthValue);
         }
 
-        public void MoveToMainMenu()
+        private void LoadMainMenu(IEventBusEventArgs e)
         {
-            LoadMainMenu();
-            OnLoadMenu?.Invoke();
+            _uiDocument.visualTreeAsset = mainMenuAsset;
+            var visualElement = _uiDocument.rootVisualElement.Q<VisualElement>("MainMenuItemsWrapper");
+
+            visualElement.Q<Button>("PlayButton").clicked += () => _eventBus.Raise("OnLoadSelectLevel", new EventBusEventArgs());
+            visualElement.Q<Button>("ExitButton").clicked += () => _eventBus.Raise("OnExit", new EventBusEventArgs());
         }
 
-        public void RestartLevel()
+        private void LoadSelectLevelMenu(IEventBusEventArgs e)
         {
-            LoadPlayerHud();
-            OnRestartLevel?.Invoke();
+            _uiDocument.visualTreeAsset = selectLevelMenuAsset;
+            var visualElement = _uiDocument.rootVisualElement.Q<VisualElement>("SelectLevelItemsWrapper");
+
+            visualElement.Q<Button>("BackToMenuButton").clicked += () => _eventBus.Raise("OnLoadMainMenu", new EventBusEventArgs());
+            //itemsAsset.Q<Button>("Level1Button").clicked += () => OnSelectLevel?.Invoke(1);
+            //itemsAsset.Q<Button>("Level2Button").clicked += () => OnSelectLevel?.Invoke(2);
+            //itemsAsset.Q<Button>("Level3Button").clicked += () => OnSelectLevel?.Invoke(3);
         }
 
-        public void ResumeLevel()
-        {
-            LoadPlayerHud();
-            OnResumeLevel?.Invoke();
-        }
-
-        public void LoadPlayerHud()
+        private void LoadPlayerHud(IEventBusEventArgs e)
         {
             _uiDocument.visualTreeAsset = playerHudAsset;
         }
 
-        public void LoadPauseMenu()
+        private void UpdateHealthValue(IEventBusEventArgs e)
+        {
+            _uiDocument.rootVisualElement.Q<Label>("HealthValue").text = $"Health: {((SingleIntParameterEventBusEventArgs)e).Number}";
+        }
+
+        private void LoadPauseMenu(IEventBusEventArgs e)
         {
             _uiDocument.visualTreeAsset = pauseAsset;
-            OnPause?.Invoke();
+            var visualElement = _uiDocument.rootVisualElement.Q<VisualElement>("PauseMenuWRapper");
+
+            visualElement.Q<Button>("ResumeButton").clicked += () => _eventBus.Raise("OnResumeGame", new EventBusEventArgs());
+            visualElement.Q<Button>("RestartButton").clicked += () => _eventBus.Raise("OnRestartGame", new EventBusEventArgs());
+            visualElement.Q<Button>("ExitButton").clicked += () => _eventBus.Raise("OnLoadMainMenu", new EventBusEventArgs());
         }
 
-        public void LoadEndGameMenu()
+        private void LoadEndGameMenu(IEventBusEventArgs e)
         {
-            _uiDocument.visualTreeAsset = endGameAsset;
-            OnEndGame?.Invoke();
+            _uiDocument.visualTreeAsset = pauseAsset;
+            var visualElement = _uiDocument.rootVisualElement.Q<VisualElement>("EndGameMenuWrapper");
+
+            visualElement.Q<Button>("RestartButton").clicked += () => _eventBus.Raise("OnRestartGame", new EventBusEventArgs());
+            visualElement.Q<Button>("ExitButton").clicked += () => _eventBus.Raise("OnLoadMainMenu", new EventBusEventArgs());
         }
 
-        public void ChangeHealthValue(int newHealthValue)
-        {
-            _playerHudVisualEl.Q<Label>($"HealthValue").text = $"Health: {newHealthValue}";
-        }
-
-        private void SignMainMenu()
-        {
-            _mainMenuVisualEl = mainMenuItemsAsset.CloneTree();
-            _selectLevelVisualEl = selectLevelAsset.CloneTree();
-
-            _mainMenuVisualEl.Q<Button>("PlayButton").clicked += LoadSelectLevelMenu;
-            _mainMenuVisualEl.Q<Button>("ExitButton").clicked += Exit;
-
-            _selectLevelVisualEl.Q<Button>("Level1Button").clicked += () => OnSelectLevel?.Invoke(1);
-            _selectLevelVisualEl.Q<Button>("Level2Button").clicked += () => OnSelectLevel?.Invoke(2);
-            _selectLevelVisualEl.Q<Button>("Level3Button").clicked += () => OnSelectLevel?.Invoke(3);
-            _selectLevelVisualEl.Q<Button>("BackToMenuButton").clicked += LoadMainMenu;
-        }
-
-        private void SignPlayerHud()
-        {
-            _playerHudVisualEl = playerHudAsset.CloneTree();
-        }
-
-        private void SignPauseMenu()
-        {
-            _pauseVisualEl = pauseAsset.CloneTree();
-
-            _pauseVisualEl.Q<Button>("ResumeButton").clicked += ResumeLevel;
-            _pauseVisualEl.Q<Button>("RestartButton").clicked += RestartLevel;
-            _pauseVisualEl.Q<Button>("ExitButton").clicked += MoveToMainMenu;
-        }
-
-        private void SignEndGameMenu()
-        {
-            _endGameVisualEl = endGameAsset.CloneTree();
-
-            _endGameVisualEl.Q<Button>("RestartButton").clicked += RestartLevel;
-            _endGameVisualEl.Q<Button>("ExitButton").clicked += MoveToMainMenu;
-        }
-
-        private void LoadMainMenu()
-        {
-            _menuWrapperVisualEl.Clear();
-            _menuWrapperVisualEl.Add(_mainMenuVisualEl);
-        }
-
-        private void LoadSelectLevelMenu()
-        {
-            _menuWrapperVisualEl.Clear();
-            _menuWrapperVisualEl.Add(_selectLevelVisualEl);
-        }
-
-        private void Exit()
+        private void Exit(IEventBusEventArgs e)
         {
             Application.Quit();
         }

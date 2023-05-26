@@ -1,6 +1,6 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
     <Style src="project://database/Assets/Prefabs/UIToolkit/uss/MenuStyles.uss?fileID=7433441132597879392&amp;guid=99f43f7a51a86b447aa8ce7ffeb7b751&amp;type=3#MenuStyles" />
-    <ui:VisualElement style="flex-grow: 0; justify-content: center; width: 60%; height: 80%; margin-left: 20%; margin-right: 20%; margin-top: 10%; margin-bottom: 10%; padding-left: 50px; padding-right: 50px; padding-top: 50px; padding-bottom: 50px; background-color: rgba(0, 0, 0, 0.47);">
+    <ui:VisualElement name="EndGameMenuWrapper" style="flex-grow: 0; justify-content: center; width: 60%; height: 80%; margin-left: 20%; margin-right: 20%; margin-top: 10%; margin-bottom: 10%; padding-left: 50px; padding-right: 50px; padding-top: 50px; padding-bottom: 50px; background-color: rgba(0, 0, 0, 0.47);">
         <ui:Label text="End" display-tooltip-when-elided="true" style="font-size: 75px; -unity-font-style: bold; -unity-font-definition: url(&apos;project://database/Assets/External/FPSFont/Square-Black%20SDF.asset?fileID=11400000&amp;guid=7dccc99780ab472478bb64131e59bda0&amp;type=2#Square-Black SDF&apos;); -unity-text-align: middle-center; margin-bottom: 50px;" />
         <ui:Button text="Restart" display-tooltip-when-elided="true" name="RestartButton" class="menu-button" />
         <ui:Button text="Exit" display-tooltip-when-elided="true" name="ExitButton" class="menu-button" />
