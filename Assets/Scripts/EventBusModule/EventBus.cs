@@ -30,7 +30,7 @@ namespace EventBusModule
             }
         }
 
-        public void Raise(string eventName, EventBusEventArgs arguments)
+        public void Raise(string eventName, IEventBusEventArgs arguments)
         {
             if (_subscribersByEventName.TryGetValue(eventName, out var subscribers))
             {

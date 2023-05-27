@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UIElements;
 using ServiceLocatorModule;
@@ -39,6 +40,7 @@ namespace UI
             _eventBus.Subscribe<EventBusEventArgs>("OnResumeGame", LoadPlayerHud);
             _eventBus.Subscribe<EventBusEventArgs>("OnRestartGame", LoadPlayerHud);
             _eventBus.Subscribe<SingleIntParameterEventBusEventArgs>("OnUpdateHealthValue", UpdateHealthValue);
+            _eventBus.Subscribe<SingleIntParameterEventBusEventArgs>("OnLoadLevel", UpdateHealthValue);
         }
 
         private void LoadMainMenu(IEventBusEventArgs e)
@@ -56,9 +58,9 @@ namespace UI
             var visualElement = _uiDocument.rootVisualElement.Q<VisualElement>("SelectLevelItemsWrapper");
 
             visualElement.Q<Button>("BackToMenuButton").clicked += () => _eventBus.Raise("OnLoadMainMenu", new EventBusEventArgs());
-            //itemsAsset.Q<Button>("Level1Button").clicked += () => OnSelectLevel?.Invoke(1);
-            //itemsAsset.Q<Button>("Level2Button").clicked += () => OnSelectLevel?.Invoke(2);
-            //itemsAsset.Q<Button>("Level3Button").clicked += () => OnSelectLevel?.Invoke(3);
+            visualElement.Q<LevelButton>("Level0Button").clicked += () => _eventBus.Raise("OnSelectLevel", new SingleIntParameterEventBusEventArgs(Convert.ToInt32(visualElement.Q<LevelButton>("Level0Button").LevelNumber)));
+            visualElement.Q<LevelButton>("Level1Button").clicked += () => _eventBus.Raise("OnSelectLevel", new SingleIntParameterEventBusEventArgs(Convert.ToInt32(visualElement.Q<LevelButton>("Level1Button").LevelNumber)));
+            visualElement.Q<LevelButton>("Level2Button").clicked += () => _eventBus.Raise("OnSelectLevel", new SingleIntParameterEventBusEventArgs(Convert.ToInt32(visualElement.Q<LevelButton>("Level2Button").LevelNumber)));
         }
 
         private void LoadPlayerHud(IEventBusEventArgs e)
