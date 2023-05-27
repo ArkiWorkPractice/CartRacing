@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3932568009066685629}
   - component: {fileID: 3932568009066685630}
   - component: {fileID: 1718760534569317068}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: HardSpawnPoint
   m_TagString: Untagged
   m_Icon: {fileID: -1412012063857583412, guid: 0000000000000000d000000000000000, type: 0}
@@ -47,7 +47,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minDamageLimit: 15
   maxDamageLimit: 50
-  placedObstacle: {fileID: 0}
 --- !u!135 &1718760534569317068
 SphereCollider:
   m_ObjectHideFlags: 0

@@ -1,17 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
+using Levels;
 using Obstacles.Abstract;
+using ScriptableObjects;
 using ServiceLocatorModule;
 using ServiceLocatorModule.Interfaces;
 using UnityEngine;
 
-namespace DefaultNamespace
+namespace Services
 {
-    public class PrefabProvider : MonoBehaviour, IService
+    [Serializable]
+    public class PrefabProvider : IService
     {
-        [SerializeField] private Obstacle[] obstacles;
+        [SerializeField] private PrefabsContainerSO prefabsContainerSo;
 
-        public Obstacle[] GetObstacles() => obstacles;
+        public Obstacle[] GetObstacles() => prefabsContainerSo.Obstacles;
+        public Level[] GetLevels() => prefabsContainerSo.Levels;
+        public Level GetLevel(int index) => prefabsContainerSo.Levels[index];
 
         public void Awake()
         {

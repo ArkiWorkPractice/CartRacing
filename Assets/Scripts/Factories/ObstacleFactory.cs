@@ -1,31 +1,29 @@
-﻿using System;
+﻿using ObjectPool;
 using Obstacles.Abstract;
 using ObstacleSpawn;
-using ServiceLocatorModule.Interfaces;
 using UnityEngine;
 
-namespace Factory
+namespace Factories
 {
     public class ObstacleFactory
     {
-        private readonly int _quantityOfEachObjects;
-         private readonly ObjectPool.ObjectPool _objectPool;
+        private readonly ObstaclePool _obstaclePool;
 
          public ObstacleFactory(Obstacle[] obstaclePrefabs, int quantityOfEachObjects)
          {
              var parentForPoolObjects = new GameObject("parent_for_pooled_objects").transform;
-             _objectPool = new ObjectPool.ObjectPool(obstaclePrefabs, _quantityOfEachObjects, parentForPoolObjects);
+             _obstaclePool = new ObstaclePool(obstaclePrefabs, quantityOfEachObjects, parentForPoolObjects);
          }
 
          public void Create(int obstacleIndex, ObstacleSpawnPoint spawnPoint)
          {
-             Obstacle obstacle = _objectPool.GetObject(obstacleIndex, spawnPoint.transform);
+             Obstacle obstacle = _obstaclePool.GetObject(obstacleIndex, spawnPoint.transform);
              spawnPoint.SetObstacle(obstacle);
          }
 
          public void ReturnToObjectPool(Obstacle obstacle)
          {
-             _objectPool.ReturnToPool(obstacle);
+             _obstaclePool.ReturnToPool(obstacle);
          }
          
     }

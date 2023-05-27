@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3cc579dd35254c10bcf1feb484652d89, type: 3}
+  m_Name: PrefabsContainer
+  m_EditorClassIdentifier: 
+  obstacles:
+  - {fileID: 7198911471951950369, guid: cb04eea70ee14ab49b68d12e2cbbf680, type: 3}
+  - {fileID: 4473481157942456536, guid: 71782582b9d2cac4cba5251a3b767d13, type: 3}
+  - {fileID: 3968279383252012857, guid: 367149bd17c4d4d4e8868ec6a5cf8d45, type: 3}
+  - {fileID: 8605241941253204260, guid: 46f9eda5f45584fb3ad05abcd7af6df2, type: 3}
+  - {fileID: 7040616723568107090, guid: 3daef342e8f3f9548b04424eac7d4d0d, type: 3}
+  - {fileID: 3789110961583308421, guid: cdcb19fde9e8cba40b7bff849baf2c1b, type: 3}
+  levels:
+  - {fileID: -5903636675809423688, guid: 4230f493c815f6149ad2c44cedf4f1ce, type: 3}
+  - {fileID: -3435507988219956769, guid: 69e72459b9820a04e9e80997612b3ac4, type: 3}
+  - {fileID: -3176566106823979183, guid: cf71b4eee27b3ba4bb4e945f6d686127, type: 3}

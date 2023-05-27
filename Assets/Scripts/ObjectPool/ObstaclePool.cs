@@ -6,39 +6,39 @@ using Random = UnityEngine.Random;
 
 namespace ObjectPool
 {
-    public class ObjectPool : MonoBehaviour
+    public class ObstaclePool : MonoBehaviour
     {
-        [SerializeField] private Transform parentForPoolObjects;
-        [SerializeField] private Obstacle[] obstaclePrefabs;
-        [SerializeField] private int quantityOfEachObjects;
+         private readonly Transform _parentForPoolObjects;
+         private readonly Obstacle[] _obstaclePrefabs;
+         private readonly int _quantityOfEachObjects;
 
         private readonly Dictionary<Type, Queue<Obstacle>> _objectPool;
 
-        public ObjectPool(Obstacle[] obstacles, int quantityObjects, Transform parentObject)
+        public ObstaclePool(Obstacle[] obstacles, int quantityObjects, Transform parentObject)
         {
             _objectPool = new Dictionary<Type, Queue<Obstacle>>();
-            obstaclePrefabs = obstacles;
-            quantityOfEachObjects = quantityObjects;
-            parentForPoolObjects = parentObject;
+            _obstaclePrefabs = obstacles;
+            _quantityOfEachObjects = quantityObjects;
+            _parentForPoolObjects = parentObject;
             InstantiateObjectPool();
         }
 
         private void InstantiateObjectPool()
         {
-            for (int i = 0; i < obstaclePrefabs.Length; i++)
+            for (int i = 0; i < _obstaclePrefabs.Length; i++)
             {
                 Queue<Obstacle> currObstacleQueue = new Queue<Obstacle>();
-                for (int j = 0; j < quantityOfEachObjects; j++)
+                for (int j = 0; j < _quantityOfEachObjects; j++)
                 {
                     currObstacleQueue.Enqueue(CreateObject(i));
                 }
-                _objectPool.Add(obstaclePrefabs[i].GetType(),currObstacleQueue);
+                _objectPool.Add(_obstaclePrefabs[i].GetType(),currObstacleQueue);
             }
         }
 
         private Obstacle CreateObject(int obstacleIndex)
         {
-            Obstacle obstacle = Instantiate(obstaclePrefabs[obstacleIndex], parentForPoolObjects);
+            Obstacle obstacle = Instantiate(_obstaclePrefabs[obstacleIndex], _parentForPoolObjects);
             obstacle.gameObject.SetActive(false);
 
             return obstacle;
@@ -46,8 +46,8 @@ namespace ObjectPool
 
         public Obstacle GetObject(int obstacleIndex, Transform parent)
         {
-            Obstacle gotObstacle = _objectPool[obstaclePrefabs[obstacleIndex].GetType()].Count != 0 ? 
-                _objectPool[obstaclePrefabs[obstacleIndex].GetType()].Dequeue() : 
+            Obstacle gotObstacle = _objectPool[_obstaclePrefabs[obstacleIndex].GetType()].Count != 0 ? 
+                _objectPool[_obstaclePrefabs[obstacleIndex].GetType()].Dequeue() : 
                 CreateObject(obstacleIndex);
             var obstacleTransform = gotObstacle.transform;
             obstacleTransform.position = parent.position;
@@ -63,7 +63,7 @@ namespace ObjectPool
         {
             _objectPool[obstacle.GetType()].Enqueue(obstacle);
             obstacle.gameObject.SetActive(false);
-            obstacle.transform.parent = parentForPoolObjects;
+            obstacle.transform.parent = _parentForPoolObjects;
         }
     }
 }

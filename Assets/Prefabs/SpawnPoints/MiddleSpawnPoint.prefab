@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7690539358693234933}
   - component: {fileID: 7690539358693234932}
   - component: {fileID: 6547328304123044281}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: MiddleSpawnPoint
   m_TagString: Untagged
   m_Icon: {fileID: -1412012063857583412, guid: 0000000000000000d000000000000000, type: 0}
@@ -47,7 +47,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minDamageLimit: 10
   maxDamageLimit: 30
-  placedObstacle: {fileID: 0}
 --- !u!135 &6547328304123044281
 SphereCollider:
   m_ObjectHideFlags: 0
