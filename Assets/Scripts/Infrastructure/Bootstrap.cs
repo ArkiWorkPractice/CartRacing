@@ -1,5 +1,4 @@
-﻿using System;
-using Infrastructure.GameStateMachine;
+﻿using Infrastructure.GameStateMachine;
 using ServiceLocatorModule;
 using UnityEngine;
 

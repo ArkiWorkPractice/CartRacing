@@ -26,7 +26,7 @@ namespace CarModule
             rightWheelTransform.rotation = rotation;
         }
 
-        public void SetMotorTorque(float torque)
+        public void ApplyMotorTorque(float torque)
         {
             leftWheelCollider.motorTorque = torque;
             rightWheelCollider.motorTorque = torque;
@@ -42,6 +42,11 @@ namespace CarModule
         {
             leftWheelCollider.brakeTorque = configHandbrakeForce;
             rightWheelCollider.brakeTorque = configHandbrakeForce;
+        }
+
+        public bool IsGrounded()
+        {
+            return leftWheelCollider.isGrounded && rightWheelCollider.isGrounded;
         }
     }
 }

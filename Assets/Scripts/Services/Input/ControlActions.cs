@@ -28,15 +28,6 @@ public partial class @ControlActions: IInputActionCollection2, IDisposable
             ""id"": ""463cda95-c4c5-4479-b1a5-67ff6da09343"",
             ""actions"": [
                 {
-                    ""name"": ""move"",
-                    ""type"": ""Value"",
-                    ""id"": ""102247fa-5f33-488f-a01f-e18e258b4bba"",
-                    ""expectedControlType"": ""Vector2"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": true
-                },
-                {
                     ""name"": ""handbrake"",
                     ""type"": ""Button"",
                     ""id"": ""ce2d0c18-7db6-437a-8ac8-47344f180bca"",
@@ -65,61 +56,6 @@ public partial class @ControlActions: IInputActionCollection2, IDisposable
                 }
             ],
             ""bindings"": [
-                {
-                    ""name"": ""keyboard"",
-                    ""id"": ""f6ee598e-5df8-4569-9619-0b65660ab7d3"",
-                    ""path"": ""2DVector"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""move"",
-                    ""isComposite"": true,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""up"",
-                    ""id"": ""9f3438f2-edef-4ba2-9b6b-0c65bca320a8"",
-                    ""path"": ""<Keyboard>/w"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""down"",
-                    ""id"": ""28d865e2-9d95-4b0e-a2b4-1cf1844525c3"",
-                    ""path"": ""<Keyboard>/s"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""left"",
-                    ""id"": ""33bd686e-2b1d-4b94-b1a8-05ce76477ca9"",
-                    ""path"": ""<Keyboard>/a"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""right"",
-                    ""id"": ""b6567bfc-3129-4250-9749-8abe34485531"",
-                    ""path"": ""<Keyboard>/d"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
                 {
                     ""name"": """",
                     ""id"": ""79136e9e-f09d-44eb-8ca4-6e7f5e8f8553"",
@@ -165,7 +101,7 @@ public partial class @ControlActions: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": true
                 },
                 {
-                    ""name"": ""1D Axis"",
+                    ""name"": ""kerboard"",
                     ""id"": ""91e9bfe7-f224-49fe-bbf7-7b9f7ce41f19"",
                     ""path"": ""1DAxis"",
                     ""interactions"": """",
@@ -232,7 +168,6 @@ public partial class @ControlActions: IInputActionCollection2, IDisposable
 }");
         // player
         m_player = asset.FindActionMap("player", throwIfNotFound: true);
-        m_player_move = m_player.FindAction("move", throwIfNotFound: true);
         m_player_handbrake = m_player.FindAction("handbrake", throwIfNotFound: true);
         m_player_direction = m_player.FindAction("direction", throwIfNotFound: true);
         m_player_turn = m_player.FindAction("turn", throwIfNotFound: true);
@@ -300,7 +235,6 @@ public partial class @ControlActions: IInputActionCollection2, IDisposable
     // player
     private readonly InputActionMap m_player;
     private List<IPlayerActions> m_PlayerActionsCallbackInterfaces = new List<IPlayerActions>();
-    private readonly InputAction m_player_move;
     private readonly InputAction m_player_handbrake;
     private readonly InputAction m_player_direction;
     private readonly InputAction m_player_turn;
@@ -308,7 +242,6 @@ public partial class @ControlActions: IInputActionCollection2, IDisposable
     {
         private @ControlActions m_Wrapper;
         public PlayerActions(@ControlActions wrapper) { m_Wrapper = wrapper; }
-        public InputAction @move => m_Wrapper.m_player_move;
         public InputAction @handbrake => m_Wrapper.m_player_handbrake;
         public InputAction @direction => m_Wrapper.m_player_direction;
         public InputAction @turn => m_Wrapper.m_player_turn;
@@ -321,9 +254,6 @@ public partial class @ControlActions: IInputActionCollection2, IDisposable
         {
             if (instance == null || m_Wrapper.m_PlayerActionsCallbackInterfaces.Contains(instance)) return;
             m_Wrapper.m_PlayerActionsCallbackInterfaces.Add(instance);
-            @move.started += instance.OnMove;
-            @move.performed += instance.OnMove;
-            @move.canceled += instance.OnMove;
             @handbrake.started += instance.OnHandbrake;
             @handbrake.performed += instance.OnHandbrake;
             @handbrake.canceled += instance.OnHandbrake;
@@ -337,9 +267,6 @@ public partial class @ControlActions: IInputActionCollection2, IDisposable
 
         private void UnregisterCallbacks(IPlayerActions instance)
         {
-            @move.started -= instance.OnMove;
-            @move.performed -= instance.OnMove;
-            @move.canceled -= instance.OnMove;
             @handbrake.started -= instance.OnHandbrake;
             @handbrake.performed -= instance.OnHandbrake;
             @handbrake.canceled -= instance.OnHandbrake;
@@ -414,7 +341,6 @@ public partial class @ControlActions: IInputActionCollection2, IDisposable
     public UiActions @ui => new UiActions(this);
     public interface IPlayerActions
     {
-        void OnMove(InputAction.CallbackContext context);
         void OnHandbrake(InputAction.CallbackContext context);
         void OnDirection(InputAction.CallbackContext context);
         void OnTurn(InputAction.CallbackContext context);

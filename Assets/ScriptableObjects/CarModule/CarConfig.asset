@@ -14,11 +14,31 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   carConfig:
     maxMotorTorque: 10000
-    maxSteeringAngle: 50
-    handbrakeForce: 50000
-    accelerationTimeInMilliseconds: 5000
-    maxSpeed: 120
-    oneStepTimeWaitAtDelayAccelerationInMilliseconds: 100
-    resistanceForce: 200
+    steeringCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: -37.29484
+        value: 60.679985
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 63.308548
+        value: 15.196407
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    brakeForce: 50000
+    delayBetweenSaving: 2000
     immortalTimeInMilliseconds: 5000
     maxHealth: 100
