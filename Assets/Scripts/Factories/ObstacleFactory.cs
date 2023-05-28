@@ -1,11 +1,12 @@
 ﻿using ObjectPool;
 using Obstacles.Abstract;
 using ObstacleSpawn;
+using ServiceLocatorModule.Interfaces;
 using UnityEngine;
 
 namespace Factories
 {
-    public class ObstacleFactory
+    public class ObstacleFactory : IService
     {
         private readonly ObstaclePool _obstaclePool;
 

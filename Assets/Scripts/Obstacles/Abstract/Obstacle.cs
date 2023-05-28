@@ -23,5 +23,10 @@ namespace Obstacles.Abstract
                 }
             }
         }
+
+        private void OnDisable()
+        {
+            NeedToReturn?.Invoke();
+        }
     }
 }

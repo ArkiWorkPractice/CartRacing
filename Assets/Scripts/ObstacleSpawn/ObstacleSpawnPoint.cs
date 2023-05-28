@@ -1,5 +1,7 @@
 ﻿using System;
+using Factories;
 using Obstacles.Abstract;
+using ServiceLocatorModule;
 using UnityEngine;
 
 namespace ObstacleSpawn
@@ -18,8 +20,6 @@ namespace ObstacleSpawn
         private bool _isActive;
         public (int,int) GetDamageLimit() => (minDamageLimit,maxDamageLimit);
 
-        public bool GetSpawnPointStatus() => _isActive;
-
         public void SetObstacle(Obstacle obstacle)
         {
             _placedObstacle = obstacle;
@@ -31,16 +31,16 @@ namespace ObstacleSpawn
             NeedToReturn?.Invoke(this);
         }
 
-        public void RemoveobstacleOnPoint()
+        public void RemoveObstacleOnPoint()
         {
             _placedObstacle = null;
         }
 
         public Obstacle GetObstacleOnPoint() => _placedObstacle;
 
-        public void ChangeActiveStatus()
+        private void OnDisable()
         {
-            _isActive = !_isActive;
+            NeedToReturn?.Invoke(this);
         }
 
         private void OnTriggerEnter(Collider other)

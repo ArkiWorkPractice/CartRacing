@@ -18,21 +18,20 @@ namespace Services
             _levelFactory = new LevelFactory();
         }
 
-        public void OnLevelSelected(int levelId)
-        {
-            _levelFactory.Create(_prefabProvider.GetLevels()[levelId]);
-            
-        }
-        public void EnterLoadLevelState(int levelIndex)
+        public void LoadLevel(int levelIndex)
         {
             ServiceLocator serviceLocator = ServiceLocator.Instance;
             Level level = _levelFactory.Create(serviceLocator.GetService<PrefabProvider>().GetLevel(levelIndex));
-            ConfigsProvider cfgProvider = serviceLocator.GetService<ConfigsProvider>();
-            ObstacleSpawner obstacleSpawner = new ObstacleSpawner(level.GetSpawnPoints(), cfgProvider.ObstacleSpawnerConfig.QuantityForEachObject);
+            level.StartLevel();
             /*
              * PlayerFactory = ServiceLocator;
              * PlayerFactory.Create(level.PlayerSpawnPosition);
              */
+        }
+
+        public void DestroyLevel()
+        {
+            _levelFactory.Remove();
         }
     }
 }

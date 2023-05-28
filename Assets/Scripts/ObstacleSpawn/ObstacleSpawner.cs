@@ -12,15 +12,15 @@ namespace ObstacleSpawn
 {
     public class ObstacleSpawner : MonoBehaviour
     {
-        private Obstacle[] _obstacles;
+        private readonly Obstacle[] _obstacles;
         //private readonly ObstacleSpawnPoint[] _spawnPoints;
         private int _quantityForOneObject;
         private readonly ObstacleFactory _obstacleFactory;
 
-        public ObstacleSpawner(ObstacleSpawnPoint[] spawnPoints, int quantityForOneObject)
+        public ObstacleSpawner(ObstacleSpawnPoint[] spawnPoints)
         {
             _obstacles = ServiceLocator.Instance.GetService<PrefabProvider>().GetObstacles();
-            _obstacleFactory = new ObstacleFactory(_obstacles,quantityForOneObject);
+            _obstacleFactory = ServiceLocator.Instance.GetService<ObstacleFactory>();
             
             for (int i = 0; i < spawnPoints.Length; i++)
             {
@@ -36,10 +36,10 @@ namespace ObstacleSpawn
 
         private void SpawnObstacles(ObstacleSpawnPoint spawnPoint)
         {
-            if (spawnPoint.GetSpawnPointStatus())
+            /*if (spawnPoint.GetSpawnPointStatus())
             {
                 return;
-            }
+            }*/
             int randomObstacleIndex = Random.Range(0, _obstacles.Length);
 
             while (!CheckSpawnPointDamageLimits(_obstacles[randomObstacleIndex], spawnPoint))
@@ -47,7 +47,7 @@ namespace ObstacleSpawn
                 randomObstacleIndex = Random.Range(0, _obstacles.Length);
             }
 
-            spawnPoint.ChangeActiveStatus();
+            //spawnPoint.ChangeActiveStatus();
             _obstacleFactory.Create(randomObstacleIndex,spawnPoint);
         }
 
@@ -56,7 +56,7 @@ namespace ObstacleSpawn
             Obstacle obstacle = spawnPoint.GetObstacleOnPoint();
             if (obstacle == null) return;
             _obstacleFactory.ReturnToObjectPool(spawnPoint.GetObstacleOnPoint());
-            spawnPoint.RemoveobstacleOnPoint();
+            spawnPoint.RemoveObstacleOnPoint();
         }
     }
 }

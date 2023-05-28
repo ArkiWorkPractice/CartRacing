@@ -53,7 +53,6 @@ namespace ObjectPool
             obstacleTransform.position = parent.position;
             var rotation = obstacleTransform.rotation;
             obstacleTransform.rotation = Quaternion.Euler(rotation.x, Random.Range(0f, 180f), rotation.z);
-            obstacleTransform.parent = parent;
             gotObstacle.gameObject.SetActive(true);
             return gotObstacle;
         
@@ -63,7 +62,6 @@ namespace ObjectPool
         {
             _objectPool[obstacle.GetType()].Enqueue(obstacle);
             obstacle.gameObject.SetActive(false);
-            obstacle.transform.parent = _parentForPoolObjects;
         }
     }
 }

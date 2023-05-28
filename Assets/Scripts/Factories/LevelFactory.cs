@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Factories
 {
-    public class LevelFactory :IService
+    public class LevelFactory
     {
         private Level _currentLevel;
 
@@ -24,7 +24,7 @@ namespace Factories
 
         public void Remove()
         {
-            Object.Destroy(_currentLevel.gameObject);
+             Object.Destroy(_currentLevel.gameObject);
             _currentLevel = null;
         }
     }
