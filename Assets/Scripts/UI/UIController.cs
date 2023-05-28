@@ -85,7 +85,7 @@ namespace UI
 
         private void LoadEndGameMenu(IEventBusEventArgs e)
         {
-            _uiDocument.visualTreeAsset = pauseAsset;
+            _uiDocument.visualTreeAsset = endGameAsset;
             var visualElement = _uiDocument.rootVisualElement.Q<VisualElement>("EndGameMenuWrapper");
 
             visualElement.Q<Button>("RestartButton").clicked += () => _eventBus.Raise("OnRestartGame", new EventBusEventArgs());

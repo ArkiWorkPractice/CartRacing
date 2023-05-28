@@ -4,7 +4,7 @@ namespace UI
 {
     public class LevelButton : Button
     {
-        public int LevelNumber;
+        public int LevelNumber { get; set; }
 
         public new class UxmlFactory : UxmlFactory<LevelButton, UxmlTraits> { }
 
