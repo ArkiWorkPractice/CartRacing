@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using Models.CarModule;
 using ServiceLocatorModule;
@@ -18,6 +19,10 @@ namespace CarModule.CarControl
         [SerializeField] private List<CarAxle> axles;
         [SerializeField] private Rigidbody carRigidbody;
         [SerializeField] private Transform centerOfMass;
+        
+        [SerializeField] private Vector3 cameraOffset;
+        [SerializeField] private int cameraTurnAngleMultiplier;
+        [SerializeField] private int cameraSpeed;
 
         private CarConfig _config;
 
@@ -28,7 +33,7 @@ namespace CarModule.CarControl
         private bool _carIsGrounded;
         private CarMovingData _movingData;
         public CarMovingData MovingData => _movingData;
-        
+
         // input
         private float _brakeInput;
         private float _gasInput;
@@ -36,18 +41,24 @@ namespace CarModule.CarControl
 
         // additional services
         private InputService _input;
+        private CarCameraFollower _carCameraFollower;
 
 
         public void Initialize(CarConfig config)
         {
             _config = config;
         }
+        
 
         private void Start()
         {
             _input = ServiceLocator.Instance.GetService<InputService>();
 
             carRigidbody.centerOfMass = centerOfMass.localPosition;
+
+
+            _carCameraFollower = new CarCameraFollower(Camera.main.transform, transform, carRigidbody,
+                cameraOffset, cameraTurnAngleMultiplier, cameraSpeed);
         }
 
         private void Update()
@@ -65,6 +76,11 @@ namespace CarModule.CarControl
             ApplyMotorTorque();
             ApplySteering();
             ApplyBrake();
+        }
+
+        private void LateUpdate()
+        {
+            _carCameraFollower.OnLateUpdate();
         }
 
         private void ApplySteering()
@@ -156,7 +172,7 @@ namespace CarModule.CarControl
             var carTransform = transform;
             _movingData = new CarMovingData(carTransform.position, carTransform.rotation, _carIsGrounded);
         }
-        
+
         private void CheckGrounded()
         {
             foreach (var axle in axles)
@@ -170,7 +186,7 @@ namespace CarModule.CarControl
 
             _carIsGrounded = true;
         }
-        
+
         public bool CarIsGrounded()
         {
             return _carIsGrounded;
