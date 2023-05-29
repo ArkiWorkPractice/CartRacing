@@ -6,23 +6,23 @@ namespace EventBusModule
 {
     public class EventBus : IService
     {
-        private Dictionary<string, List<EventBusEventHandler>> _subscribersByEventName;
+        private Dictionary<string, List<EventBusHandler>> _subscribersByEventName;
 
         public EventBus()
         {
-            _subscribersByEventName = new Dictionary<string, List<EventBusEventHandler>>();
+            _subscribersByEventName = new Dictionary<string, List<EventBusHandler>>();
         }
 
-        public void Subscribe<T>(string eventName, EventBusEventHandler action) where T : IEventBusEventArgs
+        public void Subscribe<T>(string eventName, EventBusHandler action) where T : IEventBusArgs
         {
             if (!_subscribersByEventName.ContainsKey(eventName))
             {
-                _subscribersByEventName.Add(eventName, new List<EventBusEventHandler>());
+                _subscribersByEventName.Add(eventName, new List<EventBusHandler>());
             }
             _subscribersByEventName[eventName].Add(action);
         }
 
-        public void Unsubscribe<T>(string eventName, EventBusEventHandler action) where T : IEventBusEventArgs
+        public void Unsubscribe<T>(string eventName, EventBusHandler action) where T : IEventBusArgs
         {
             if (_subscribersByEventName.ContainsKey(eventName))
             {
@@ -30,7 +30,7 @@ namespace EventBusModule
             }
         }
 
-        public void Raise(string eventName, IEventBusEventArgs arguments)
+        public void Raise(string eventName, IEventBusArgs arguments)
         {
             if (_subscribersByEventName.TryGetValue(eventName, out var subscribers))
             {

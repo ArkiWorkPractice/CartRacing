@@ -2,11 +2,11 @@
 
 namespace EventBusModule
 {
-    public class SingleIntParameterEventBusEventArgs : IEventBusEventArgs
+    public class SingleIntParameterEventBusArgs : IEventBusArgs
     {
         public int Number;
 
-        public SingleIntParameterEventBusEventArgs(int number) : base()
+        public SingleIntParameterEventBusArgs(int number) : base()
         {
             Number = number;
         }
