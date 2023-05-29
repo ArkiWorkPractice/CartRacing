@@ -47,7 +47,7 @@ namespace CarModule.CarControl
         {
             _input = ServiceLocator.Instance.GetService<InputService>();
 
-            carRigidbody.centerOfMass = centerOfMass.position;
+            carRigidbody.centerOfMass = centerOfMass.localPosition;
         }
 
         private void Update()
