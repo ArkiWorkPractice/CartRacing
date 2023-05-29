@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using CarModule.CarComponents;
 using CarModule.CarControl;
@@ -9,6 +8,7 @@ using UnityEngine;
 
 namespace CarModule
 {
+    [RequireComponent(typeof(CarController))]
     public class Car : MonoBehaviour, IDamageable
     {
         [SerializeField] private CarConfigSo carConfigSo;
@@ -37,8 +37,6 @@ namespace CarModule
         {
             _health = new Health(_config.MaxHealth);
             _damageable = new SimpleDamageable(_health);
-            
-            
         }
 
         public void MakeDamage(int damage)
@@ -57,10 +55,7 @@ namespace CarModule
             _damageable = new SimpleDamageable(_health);
         }
 
-        private void OnDisable()
-        {
-            CancelImmortal();
-        }
+        
 
         private void CancelImmortal()
         {
@@ -72,11 +67,16 @@ namespace CarModule
         {
             return carController.MovingData;
         }
+        
+        private void OnDisable()
+        {
+            CancelImmortal();
+        }
 
-        public void Reset()
+        public void Reinitialize()
         {
             InitializeCar();
-            carController.Reset();
+            carController.Reinitialize();
         }
 
         public void ResetPosition(CarMovingData data)

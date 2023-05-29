@@ -22,12 +22,23 @@ namespace Services.Input
         {
             _actions = new ControlActions();
             _actions.Enable();
-
             ServiceLocator.Instance.RegisterService(this);
             
             SubscribePlayerInputs();
             SubscribeUIInputs();
         }
+        
+        private void OnEnable()
+        {
+            
+        }
+
+        private void OnDisable()
+        {
+            Dispose();
+            ServiceLocator.Instance.UnregisterService<InputService>();
+        }
+        
 
         private void SubscribeUIInputs()
         {
@@ -86,11 +97,7 @@ namespace Services.Input
         public float GetDirection() => _direction;
         public float GetTurn() => _turn;
 
-
-        private void OnDisable()
-        {
-            Dispose();
-        }
+       
 
         public void Dispose()
         {

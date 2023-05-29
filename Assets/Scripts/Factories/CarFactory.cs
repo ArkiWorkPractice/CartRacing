@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Factories
 {
-    public class CarFactory : IService
+    public class CarFactory
     {
         private readonly Car _carPrefab;
         
@@ -24,6 +24,12 @@ namespace Factories
             _car = Object.Instantiate(_carPrefab, spawnPoint);
 
             return _car;
+        }
+
+        private void Clear()
+        {
+            Object.Destroy(_car.gameObject);
+            _car = null;
         }
         
     }

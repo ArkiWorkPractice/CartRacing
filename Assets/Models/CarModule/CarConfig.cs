@@ -9,8 +9,7 @@ namespace Models.CarModule
         [SerializeField] private float maxMotorTorque;
         [SerializeField] private AnimationCurve steeringCurve;
         [SerializeField] private float brakeForce;
-
-      
+        
         [SerializeField] private int delayBetweenSaving;
         [SerializeField] private int immortalTimeInMilliseconds;
         [SerializeField] private int maxHealth;

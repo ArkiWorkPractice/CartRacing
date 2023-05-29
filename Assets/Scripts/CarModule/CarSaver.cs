@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using Models.CarModule;
 using ServiceLocatorModule;
 using ServiceLocatorModule.Interfaces;
@@ -20,7 +21,7 @@ namespace CarModule
         {
             ServiceLocator.Instance.RegisterService(this);
         }
-
+        
         private void Update()
         {
             if (Input.GetKeyDown(KeyCode.R))
@@ -29,6 +30,11 @@ namespace CarModule
             }
         }
 
+        private void OnDisable()
+        {
+            StopSaving();
+        }
+        
         public void Initialize(Car car, int delayBetweenSaving)
         {
             _car = car;
@@ -38,7 +44,7 @@ namespace CarModule
 
         public void RestoreData()
         {
-            _car.Reset();
+            _car.Reinitialize();
             _car.ResetPosition(_lastPosition);
             
             Debug.Log("restored");

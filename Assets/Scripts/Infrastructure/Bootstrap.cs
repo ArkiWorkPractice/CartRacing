@@ -1,6 +1,4 @@
-﻿using Infrastructure.GameStateMachine;
-using ServiceLocatorModule;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Infrastructure
 {
@@ -9,8 +7,7 @@ namespace Infrastructure
     {
         private void Awake()
         {
-            var stateMachine = new StateMachine();
-            ServiceLocator.Instance.RegisterService(stateMachine);
+           
         }
     }
 }

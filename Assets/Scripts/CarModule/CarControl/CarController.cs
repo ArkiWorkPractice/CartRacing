@@ -135,14 +135,16 @@ namespace CarModule.CarControl
 
         private void ShowNewInfo()
         {
-            if (infoText)
+            if (!infoText)
                 return;
 
             StringBuilder info = new StringBuilder();
             info.Append($"Motor Torque: {_currentMotorTorque}");
             info.Append($"\nRB speed: {_currentSpeed}");
             info.Append($"\nSteering: {_currentSteeringAngle}");
-            info.Append($"\nDirection: {_gasInput}");
+            info.Append($"\nDirection input: {_gasInput}");
+            info.Append($"\nTurn input: {_turnInput}");
+            info.Append($"\nWheel RPM: {axles[0].leftWheelCollider.rpm}");
 
             infoText.text = info.ToString();
         }
@@ -150,8 +152,9 @@ namespace CarModule.CarControl
         public void SaveMovingData()
         {
             CheckGrounded();
-            
-            _movingData = new CarMovingData(transform.position, transform.rotation, _carIsGrounded);
+
+            var carTransform = transform;
+            _movingData = new CarMovingData(carTransform.position, carTransform.rotation, _carIsGrounded);
         }
         
         private void CheckGrounded()
@@ -173,7 +176,7 @@ namespace CarModule.CarControl
             return _carIsGrounded;
         }
 
-        public void Reset()
+        public void Reinitialize()
         {
             _currentMotorTorque = 0;
             _currentSpeed = 0;
