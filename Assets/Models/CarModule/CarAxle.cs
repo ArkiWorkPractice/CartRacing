@@ -1,15 +1,15 @@
 ﻿using System;
 using UnityEngine;
 
-namespace CarModule
+namespace Models.CarModule
 {
     [Serializable]
     public class CarAxle
     {
-        public WheelCollider leftWheelCollider;
-        public WheelCollider rightWheelCollider;
-        public Transform leftWheelTransform;
-        public Transform rightWheelTransform;
+        [SerializeField] private WheelCollider leftWheelCollider;
+        [SerializeField] private WheelCollider rightWheelCollider;
+        [SerializeField] private Transform leftWheelTransform;
+        [SerializeField] private Transform rightWheelTransform;
         
         public bool hasMotor;
         public bool canSteer;

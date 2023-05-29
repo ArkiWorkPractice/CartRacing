@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text;
 using Models.CarModule;
 using ServiceLocatorModule;
@@ -47,6 +46,7 @@ namespace CarModule.CarControl
         public void Initialize(CarConfig config)
         {
             _config = config;
+            SaveMovingData();
         }
         
 
@@ -160,12 +160,12 @@ namespace CarModule.CarControl
             info.Append($"\nSteering: {_currentSteeringAngle}");
             info.Append($"\nDirection input: {_gasInput}");
             info.Append($"\nTurn input: {_turnInput}");
-            info.Append($"\nWheel RPM: {axles[0].leftWheelCollider.rpm}");
+            //info.Append($"\nWheel RPM: {axles[0].leftWheelCollider.rpm}");
 
             infoText.text = info.ToString();
         }
 
-        public void SaveMovingData()
+        private void SaveMovingData()
         {
             CheckGrounded();
 
@@ -183,7 +183,7 @@ namespace CarModule.CarControl
                     return;
                 }
             }
-
+            
             _carIsGrounded = true;
         }
 

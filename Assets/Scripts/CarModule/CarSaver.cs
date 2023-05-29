@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using Models.CarModule;
-using ServiceLocatorModule;
 using ServiceLocatorModule.Interfaces;
 using UnityEngine;
 
@@ -17,11 +15,7 @@ namespace CarModule
         private Coroutine _saverCoroutine;
         private bool _savingInProcess;
 
-        private void Awake()
-        {
-            ServiceLocator.Instance.RegisterService(this);
-        }
-        
+
         private void Update()
         {
             if (Input.GetKeyDown(KeyCode.R))
@@ -40,6 +34,7 @@ namespace CarModule
             _car = car;
             _delayBetweenSaving = delayBetweenSaving;
             _savingInProcess = false;
+            _lastPosition = _car.GetMovingData();
         }
 
         public void RestoreData()
@@ -52,7 +47,7 @@ namespace CarModule
 
         public void StartSaving()
         {
-            _savingInProcess = false;
+            _savingInProcess = true;
             _saverCoroutine = StartCoroutine(Saving());
         }
 

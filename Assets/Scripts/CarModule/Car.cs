@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using CarModule.CarComponents;
 using CarModule.CarControl;
 using Models.CarModule;
-using ServiceLocatorModule;
 using UnityEngine;
 
 namespace CarModule
@@ -13,6 +12,7 @@ namespace CarModule
     {
         [SerializeField] private CarConfigSo carConfigSo;
         [SerializeField] private CarController carController;
+        [SerializeField] private CarSaver carSaver;
 
         private CarConfig _config;
         private IDamageable _damageable;
@@ -27,10 +27,9 @@ namespace CarModule
             InitializeCar();
 
             carController.Initialize(_config);
-
-            var saver = ServiceLocator.Instance.GetService<CarSaver>();
-            saver.Initialize(this, _config.DelayBetweenSaving);
-            saver.StartSaving();
+            
+            carSaver.Initialize(this, _config.DelayBetweenSaving);
+            carSaver.StartSaving();
         }
 
         private void InitializeCar()
