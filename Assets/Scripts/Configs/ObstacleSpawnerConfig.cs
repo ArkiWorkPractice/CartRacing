@@ -6,7 +6,6 @@ namespace Configs
     public class ObstacleSpawnerConfig : ScriptableObject
     {
         [SerializeField] private int quantityForEachObject;
-
         public int QuantityForEachObject => quantityForEachObject;
     }
 }

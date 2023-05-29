@@ -13,7 +13,6 @@ namespace ObstacleSpawn
     public class ObstacleSpawner : MonoBehaviour
     {
         private readonly Obstacle[] _obstacles;
-        //private readonly ObstacleSpawnPoint[] _spawnPoints;
         private int _quantityForOneObject;
         private readonly ObstacleFactory _obstacleFactory;
 
@@ -30,16 +29,12 @@ namespace ObstacleSpawn
         }
         private bool CheckSpawnPointDamageLimits(Obstacle obstacle, ObstacleSpawnPoint spawnPoint)
         {
-            var damageLimit = spawnPoint.GetDamageLimit();
-            return obstacle.GetDamage() >= damageLimit.Item1 && obstacle.GetDamage() <= damageLimit.Item2;
+            var (min, max) = spawnPoint.GetDamageLimit();
+            return obstacle.GetDamage() >= min && obstacle.GetDamage() <= max;
         }
 
         private void SpawnObstacles(ObstacleSpawnPoint spawnPoint)
         {
-            /*if (spawnPoint.GetSpawnPointStatus())
-            {
-                return;
-            }*/
             int randomObstacleIndex = Random.Range(0, _obstacles.Length);
 
             while (!CheckSpawnPointDamageLimits(_obstacles[randomObstacleIndex], spawnPoint))
@@ -47,7 +42,6 @@ namespace ObstacleSpawn
                 randomObstacleIndex = Random.Range(0, _obstacles.Length);
             }
 
-            //spawnPoint.ChangeActiveStatus();
             _obstacleFactory.Create(randomObstacleIndex,spawnPoint);
         }
 

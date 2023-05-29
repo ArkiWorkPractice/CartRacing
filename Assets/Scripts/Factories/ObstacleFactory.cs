@@ -18,7 +18,7 @@ namespace Factories
 
          public void Create(int obstacleIndex, ObstacleSpawnPoint spawnPoint)
          {
-             Obstacle obstacle = _obstaclePool.GetObject(obstacleIndex, spawnPoint.transform);
+             Obstacle obstacle = _obstaclePool.GetObject(obstacleIndex, spawnPoint.transform.position);
              spawnPoint.SetObstacle(obstacle);
          }
 

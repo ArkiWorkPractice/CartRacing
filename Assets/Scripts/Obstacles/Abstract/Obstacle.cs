@@ -1,4 +1,6 @@
 using System;
+using Obstacles.Interface;
+using Test;
 using UnityEngine;
 
 namespace Obstacles.Abstract

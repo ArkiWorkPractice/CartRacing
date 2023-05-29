@@ -20,8 +20,7 @@ namespace Services
 
         public void LoadLevel(int levelIndex)
         {
-            ServiceLocator serviceLocator = ServiceLocator.Instance;
-            Level level = _levelFactory.Create(serviceLocator.GetService<PrefabProvider>().GetLevel(levelIndex));
+            Level level = _levelFactory.Create(_prefabProvider.GetLevel(levelIndex));
             level.StartLevel();
             /*
              * PlayerFactory = ServiceLocator;

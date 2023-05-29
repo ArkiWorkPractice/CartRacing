@@ -16,8 +16,7 @@ namespace ObstacleSpawn
 
         public event Action<ObstacleSpawnPoint> PlayerIsNear;
         public event Action<ObstacleSpawnPoint> NeedToReturn;
-
-        private bool _isActive;
+        
         public (int,int) GetDamageLimit() => (minDamageLimit,maxDamageLimit);
 
         public void SetObstacle(Obstacle obstacle)

@@ -1,4 +1,4 @@
-﻿namespace Obstacles.Abstract
+﻿namespace Test
 {
     public interface IDamageable
     {

@@ -1,4 +1,4 @@
-﻿namespace Obstacles.Abstract
+﻿namespace Obstacles.Interface
 {
     public interface IDestroyable
     {

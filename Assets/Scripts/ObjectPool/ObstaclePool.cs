@@ -8,9 +8,9 @@ namespace ObjectPool
 {
     public class ObstaclePool : MonoBehaviour
     {
-         private readonly Transform _parentForPoolObjects;
-         private readonly Obstacle[] _obstaclePrefabs;
-         private readonly int _quantityOfEachObjects;
+        private readonly Transform _parentForPoolObjects;
+        private readonly Obstacle[] _obstaclePrefabs;
+        private readonly int _quantityOfEachObjects;
 
         private readonly Dictionary<Type, Queue<Obstacle>> _objectPool;
 
@@ -44,13 +44,13 @@ namespace ObjectPool
             return obstacle;
         }
 
-        public Obstacle GetObject(int obstacleIndex, Transform parent)
+        public Obstacle GetObject(int obstacleIndex, Vector3 position)
         {
             Obstacle gotObstacle = _objectPool[_obstaclePrefabs[obstacleIndex].GetType()].Count != 0 ? 
                 _objectPool[_obstaclePrefabs[obstacleIndex].GetType()].Dequeue() : 
                 CreateObject(obstacleIndex);
             var obstacleTransform = gotObstacle.transform;
-            obstacleTransform.position = parent.position;
+            obstacleTransform.position = position;
             var rotation = obstacleTransform.rotation;
             obstacleTransform.rotation = Quaternion.Euler(rotation.x, Random.Range(0f, 180f), rotation.z);
             gotObstacle.gameObject.SetActive(true);

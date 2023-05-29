@@ -10,12 +10,9 @@ namespace Levels
         [SerializeField] private int levelId;
         [SerializeField] private ObstacleSpawnPoint[] spawnPoints;
         [SerializeField] private Transform playerSpawnPosition;
-        [SerializeField] private EndGameNotifier endGameNotifier;
         private ObstacleSpawner _obstacleSpawner;
         public int GetLevelId() => levelId;
-
         public Transform GetPlayerPosition() => playerSpawnPosition;
-
         public ObstacleSpawnPoint[] GetSpawnPoints() => spawnPoints;
 
         public void StartLevel()
