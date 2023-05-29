@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Levels;
 using Obstacles.Abstract;
 using ScriptableObjects;
@@ -15,7 +16,7 @@ namespace Services
 
         public Obstacle[] GetObstacles() => prefabsContainerSo.Obstacles;
         public Level[] GetLevels() => prefabsContainerSo.Levels;
-        public Level GetLevel(int index) => prefabsContainerSo.Levels[index];
+        public Level GetLevel(int index) => prefabsContainerSo.Levels.First(l => l.GetLevelId()==index);
 
         public void Awake()
         {
