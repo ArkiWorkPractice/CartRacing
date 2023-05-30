@@ -38,7 +38,10 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
+    steeringAngle: 30
     brakeForce: 50000
     delayBetweenSaving: 2000
     immortalTimeInMilliseconds: 5000
     maxHealth: 100
+    directionSmoothing: 1
+    turnSmoothing: 1

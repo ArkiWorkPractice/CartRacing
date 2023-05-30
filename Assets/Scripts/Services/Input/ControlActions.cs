@@ -49,7 +49,7 @@ public partial class @ControlActions: IInputActionCollection2, IDisposable
                     ""name"": ""turn"",
                     ""type"": ""Value"",
                     ""id"": ""d4b82f2c-b231-47bf-b935-291b7800b645"",
-                    ""expectedControlType"": ""Axis"",
+                    ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true

@@ -30,6 +30,7 @@ namespace CarModule.CarControl
         public CarMovingData MovingData => _movingData;
 
         // input
+        private Vector2 _currentDirectionInput;
         private bool _handbrake;
         private float _brakeInput;
         private float _gasInput;
@@ -57,21 +58,16 @@ namespace CarModule.CarControl
             CheckInput();
             UpdateWheelMesh();
             SaveMovingData();
-            ShowNewInfo();
-            
-        }
-
-
-        private void FixedUpdate()
-        {
-            ApplyMotorTorque();
             ApplySteering();
+            ApplyMotorTorque();
             ApplyBrake();
+            ShowNewInfo();
         }
-        
+
         private void ApplySteering()
         {
-            _currentSteeringAngle = _turnInput * _config.SteeringCurve.Evaluate(_currentSpeed);
+            
+            _currentSteeringAngle = _turnInput * _config.SteeringAngle;
 
             foreach (var axle in axles)
             {
@@ -117,57 +113,22 @@ namespace CarModule.CarControl
             }
         }
 
-        private float CalculateGasInput(float directionInput)
-        {
-            if (directionInput > 0.5f)
-            {
-                return _gasInput > 1f ? 1f : _gasInput + _config.DirectionSmoothing * Time.deltaTime;
-            }
-            else if (directionInput < -0.5f)
-            {
-                return _gasInput < -1f ? -1f : _gasInput - _config.DirectionSmoothing * Time.deltaTime;
-            }
-            else
-            {
-                return 0;
-            }
-        }
-        
-        private float CalculateTurnInput(float turnInput)
-        {
-            if (turnInput > 0.5f)
-            {
-                return _turnInput > 1f ? 1f : _turnInput + _config.TurnSmoothing * Time.deltaTime;
-            }
-            else if (turnInput < -0.5f)
-            {
-                return _turnInput < -1f ? -1f : _turnInput - _config.TurnSmoothing * Time.deltaTime;
-            }
-            else
-            {
-                return 0;
-            }
-        }
-        
         private void CheckInput()
         {
             _handbrake = _input.GetHandbrakeStatus();
             
-            float directionInput = _input.GetDirection();
-            _gasInput = CalculateGasInput(directionInput);
-            
-            _turnInput = CalculateTurnInput(_input.GetTurn());
+            _gasInput = _input.Direction.x;
 
-            var forward = transform.forward;
+            _turnInput = _input.Direction.y;
 
-            float movingDirection = Vector3.Dot(forward, carRigidbody.velocity);
-            if (movingDirection < -0.5f && directionInput > 0)
+            float movingDirection = Vector3.Dot(transform.forward, carRigidbody.velocity);
+            if (movingDirection < -0.5f && _gasInput > 0)
             {
-                _brakeInput = Mathf.Abs(directionInput);
+                _brakeInput = Mathf.Abs(_gasInput);
             }
-            else if (movingDirection > 0.5f && directionInput < 0)
+            else if (movingDirection > 0.5f && _gasInput < 0)
             {
-                _brakeInput = Mathf.Abs(directionInput);
+                _brakeInput = Mathf.Abs(_gasInput);
             }
             else
             {
@@ -209,7 +170,7 @@ namespace CarModule.CarControl
                     return;
                 }
             }
-            
+
             _carIsGrounded = true;
         }
 
@@ -229,7 +190,7 @@ namespace CarModule.CarControl
                 axle.ApplySteering(0);
                 axle.ApplyMotorTorque(0);
             }
-            
+
 
             carRigidbody.velocity = Vector3.zero;
         }

@@ -9,6 +9,7 @@ namespace Models.CarModule
 
         [SerializeField] private float maxMotorTorque;
         [SerializeField] private AnimationCurve steeringCurve;
+        [SerializeField] private float steeringAngle;
         [SerializeField] private float brakeForce;
         
         [SerializeField] private int delayBetweenSaving;
@@ -25,6 +26,7 @@ namespace Models.CarModule
             immortalTimeInMilliseconds = carConfig.immortalTimeInMilliseconds;
             maxHealth = carConfig.maxHealth;
             steeringCurve = carConfig.steeringCurve;
+            steeringAngle = carConfig.steeringAngle;
             delayBetweenSaving = carConfig.delayBetweenSaving;
             directionSmoothing = carConfig.directionSmoothing;
             turnSmoothing = carConfig.turnSmoothing;
@@ -36,6 +38,7 @@ namespace Models.CarModule
         public int MaxHealth => maxHealth;
         public int ImmortalTimeInMilliseconds => immortalTimeInMilliseconds;
         public AnimationCurve SteeringCurve => steeringCurve;
+        public float SteeringAngle => steeringAngle;
         public int DelayBetweenSaving => delayBetweenSaving;
         public float DirectionSmoothing => directionSmoothing;
 

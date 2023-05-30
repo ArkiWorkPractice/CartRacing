@@ -8,10 +8,16 @@ namespace Services.Input
 {
     public class InputService : MonoBehaviour, IDisposable, IService
     {
+        [SerializeField] private float smoothInputSpeed;
+        
         private ControlActions _actions;
 
-        private float _direction;
-        private float _turn;
+        private Vector2 _currentDirection;
+        private Vector2 _directionInput;
+        private Vector2 _smoothDirectionInputVelocity;
+        
+        public Vector2 Direction => _currentDirection;
+        
         private bool _isHandbrakeActivated;
         
         public event Action<bool> HandbrakeStateChanged;
@@ -24,9 +30,17 @@ namespace Services.Input
             _actions = new ControlActions();
             _actions.Enable();
             ServiceLocator.Instance.RegisterService(this);
+
+            _directionInput = new Vector2(0, 0);
             
             SubscribePlayerInputs();
             SubscribeUIInputs();
+        }
+        
+        
+        private void Update()
+        {
+            _currentDirection = Vector2.SmoothDamp(_currentDirection, _directionInput, ref _smoothDirectionInputVelocity, smoothInputSpeed);
         }
 
         private void OnDisable()
@@ -35,7 +49,6 @@ namespace Services.Input
             ServiceLocator.Instance.UnregisterService<InputService>();
         }
         
-
         private void SubscribeUIInputs()
         {
             _actions.ui.escape.performed += OnEscapePerformed;
@@ -60,23 +73,23 @@ namespace Services.Input
 
         private void OnTurnCanceled(InputAction.CallbackContext obj)
         {
-            _turn = 0;
+            _directionInput.y = 0;
         }
 
         private void OnDirectionCanceled(InputAction.CallbackContext obj)
         {
-            _direction = 0;
+            _directionInput.x = 0;
             CarMoveCanceled?.Invoke();
         }
 
         private void OnTurnPerformed(InputAction.CallbackContext obj)
         {
-            _turn = obj.ReadValue<float>();
+            _directionInput.y = obj.ReadValue<float>();;
         }
 
         private void OnDirectionPerformed(InputAction.CallbackContext obj)
         {
-            _direction = obj.ReadValue<float>();
+            _directionInput.x = obj.ReadValue<float>();
             DirectionChanged?.Invoke();
         }
 
@@ -91,12 +104,8 @@ namespace Services.Input
             _isHandbrakeActivated = false;
             HandbrakeStateChanged?.Invoke(false);
         }
-
-        public float GetDirection() => _direction;
-        public float GetTurn() => _turn;
-
+        
         public bool GetHandbrakeStatus() => _isHandbrakeActivated;
-       
 
         public void Dispose()
         {
