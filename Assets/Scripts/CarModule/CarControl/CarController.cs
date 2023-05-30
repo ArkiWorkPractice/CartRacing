@@ -117,22 +117,57 @@ namespace CarModule.CarControl
             }
         }
 
+        private float CalculateGasInput(float directionInput)
+        {
+            if (directionInput > 0.5f)
+            {
+                return _gasInput > 1f ? 1f : _gasInput + _config.DirectionSmoothing * Time.deltaTime;
+            }
+            else if (directionInput < -0.5f)
+            {
+                return _gasInput < -1f ? -1f : _gasInput - _config.DirectionSmoothing * Time.deltaTime;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+        
+        private float CalculateTurnInput(float turnInput)
+        {
+            if (turnInput > 0.5f)
+            {
+                return _turnInput > 1f ? 1f : _turnInput + _config.TurnSmoothing * Time.deltaTime;
+            }
+            else if (turnInput < -0.5f)
+            {
+                return _turnInput < -1f ? -1f : _turnInput - _config.TurnSmoothing * Time.deltaTime;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+        
         private void CheckInput()
         {
             _handbrake = _input.GetHandbrakeStatus();
-            _gasInput = _input.GetDirection();
-            _turnInput = _input.GetTurn();
+            
+            float directionInput = _input.GetDirection();
+            _gasInput = CalculateGasInput(directionInput);
+            
+            _turnInput = CalculateTurnInput(_input.GetTurn());
 
             var forward = transform.forward;
 
             float movingDirection = Vector3.Dot(forward, carRigidbody.velocity);
-            if (movingDirection < -0.5f && _gasInput > 0)
+            if (movingDirection < -0.5f && directionInput > 0)
             {
-                _brakeInput = Mathf.Abs(_gasInput);
+                _brakeInput = Mathf.Abs(directionInput);
             }
-            else if (movingDirection > 0.5f && _gasInput < 0)
+            else if (movingDirection > 0.5f && directionInput < 0)
             {
-                _brakeInput = Mathf.Abs(_gasInput);
+                _brakeInput = Mathf.Abs(directionInput);
             }
             else
             {

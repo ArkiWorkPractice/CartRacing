@@ -12,6 +12,7 @@ namespace CarModule
         [SerializeField] private Car carPrefab;
         [SerializeField] private Transform carSpawnPosition;
         private Car _car;
+        
         void Awake()
         {
             CarFactory factory = new CarFactory(carPrefab);
