@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Factories
 {
-    public class CarFactory
+    public class CarFactory : IService
     {
         private readonly Car _carPrefab;
         

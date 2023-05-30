@@ -617,6 +617,7 @@ GameObject:
   - component: {fileID: 1513440064929857279}
   - component: {fileID: 1513440064929857276}
   - component: {fileID: 9025591402469441689}
+  - component: {fileID: 2133875202}
   m_Layer: 0
   m_Name: Car
   m_TagString: Untagged
@@ -707,6 +708,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   carConfigSo: {fileID: 11400000, guid: 520d9014f9874b642974fe9d5db7de86, type: 2}
   carController: {fileID: 1513440064929857276}
+  carSaver: {fileID: 2133875202}
+--- !u!114 &2133875202
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6533228956249102940}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65620778581b46fe8bf686bc0ae11a98, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6655307893432766566
 GameObject:
   m_ObjectHideFlags: 0

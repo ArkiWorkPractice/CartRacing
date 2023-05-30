@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using CarModule.CarComponents;
 using CarModule.CarControl;
@@ -18,24 +19,39 @@ namespace CarModule
         private IDamageable _damageable;
         private Health _health;
 
+        public event Action<int> HealthChanged;
+        public event Action Died;
+
         private CancellationTokenSource _immortalCancellationTokenSource;
 
         public void Start()
         {
-            _config = carConfigSo.GetConfig();
-
             InitializeCar();
 
-            carController.Initialize(_config);
-            
             carSaver.Initialize(this, _config.DelayBetweenSaving);
             carSaver.StartSaving();
         }
 
         private void InitializeCar()
         {
+            _config = carConfigSo.GetConfig();
+            
             _health = new Health(_config.MaxHealth);
+            _health.Died += OnDied;
+            _health.HealthValueChanged += OnHealthChanged;
+            
             _damageable = new SimpleDamageable(_health);
+            carController.Initialize(_config);
+        }
+
+        private void OnHealthChanged(int value)
+        {
+            HealthChanged?.Invoke(value);
+        }
+
+        private void OnDied()
+        {
+            Died?.Invoke();
         }
 
         public void MakeDamage(int damage)

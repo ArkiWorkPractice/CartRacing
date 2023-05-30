@@ -18,10 +18,6 @@ namespace CarModule.CarControl
         [SerializeField] private List<CarAxle> axles;
         [SerializeField] private Rigidbody carRigidbody;
         [SerializeField] private Transform centerOfMass;
-        
-        [SerializeField] private Vector3 cameraOffset;
-        [SerializeField] private int cameraTurnAngleMultiplier;
-        [SerializeField] private int cameraSpeed;
 
         private CarConfig _config;
 
@@ -40,25 +36,18 @@ namespace CarModule.CarControl
 
         // additional services
         private InputService _input;
-        private CarCameraFollower _carCameraFollower;
-
 
         public void Initialize(CarConfig config)
         {
             _config = config;
             SaveMovingData();
         }
-        
 
         private void Start()
         {
             _input = ServiceLocator.Instance.GetService<InputService>();
 
             carRigidbody.centerOfMass = centerOfMass.localPosition;
-
-
-            _carCameraFollower = new CarCameraFollower(Camera.main.transform, transform, carRigidbody,
-                cameraOffset, cameraTurnAngleMultiplier, cameraSpeed);
         }
 
         private void Update()
@@ -68,6 +57,7 @@ namespace CarModule.CarControl
             UpdateWheelMesh();
             SaveMovingData();
             ShowNewInfo();
+            
         }
 
 
@@ -77,12 +67,7 @@ namespace CarModule.CarControl
             ApplySteering();
             ApplyBrake();
         }
-
-        private void LateUpdate()
-        {
-            _carCameraFollower.OnLateUpdate();
-        }
-
+        
         private void ApplySteering()
         {
             _currentSteeringAngle = _turnInput * _config.SteeringCurve.Evaluate(_currentSpeed);
@@ -141,11 +126,6 @@ namespace CarModule.CarControl
             else
             {
                 _brakeInput = 0;
-            }
-
-            if (_gasInput < 0.5 && _gasInput > -0.5)
-            {
-                _brakeInput = 1;
             }
         }
 
