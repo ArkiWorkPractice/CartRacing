@@ -30,6 +30,7 @@ namespace CarModule.CarControl
         public CarMovingData MovingData => _movingData;
 
         // input
+        private bool _handbrake;
         private float _brakeInput;
         private float _gasInput;
         private float _turnInput;
@@ -83,8 +84,17 @@ namespace CarModule.CarControl
 
         private void ApplyBrake()
         {
-            axles[0].ApplyBrakePower(_brakeInput * _config.BrakeForce * 0.7f);
-            axles[1].ApplyBrakePower(_brakeInput * _config.BrakeForce * 0.3f);
+            foreach (var axle in axles)
+            {
+                if (_handbrake && axle.hasHandbrake)
+                {
+                    axle.ApplyBrakePower(_config.BrakeForce, true);
+                }
+                else
+                {
+                    axle.ApplyBrakePower(_brakeInput * _config.BrakeForce);
+                }
+            }
         }
 
         private void ApplyMotorTorque()
@@ -109,6 +119,7 @@ namespace CarModule.CarControl
 
         private void CheckInput()
         {
+            _handbrake = _input.GetHandbrakeStatus();
             _gasInput = _input.GetDirection();
             _turnInput = _input.GetTurn();
 
@@ -167,11 +178,6 @@ namespace CarModule.CarControl
             _carIsGrounded = true;
         }
 
-        public bool CarIsGrounded()
-        {
-            return _carIsGrounded;
-        }
-
         public void Reinitialize()
         {
             _currentMotorTorque = 0;
@@ -188,6 +194,7 @@ namespace CarModule.CarControl
                 axle.ApplySteering(0);
                 axle.ApplyMotorTorque(0);
             }
+            
 
             carRigidbody.velocity = Vector3.zero;
         }

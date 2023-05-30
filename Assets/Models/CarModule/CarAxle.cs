@@ -10,7 +10,8 @@ namespace Models.CarModule
         [SerializeField] private WheelCollider rightWheelCollider;
         [SerializeField] private Transform leftWheelTransform;
         [SerializeField] private Transform rightWheelTransform;
-        
+        [SerializeField] private float brakeReducer;
+
         public bool hasMotor;
         public bool canSteer;
         public bool hasHandbrake;
@@ -38,10 +39,11 @@ namespace Models.CarModule
             rightWheelCollider.steerAngle = currentSteeringAngle;
         }
 
-        public void ApplyBrakePower(float configHandbrakeForce)
+        public void ApplyBrakePower(float configHandbrakeForce, bool isHandbrake = false)
         {
-            leftWheelCollider.brakeTorque = configHandbrakeForce;
-            rightWheelCollider.brakeTorque = configHandbrakeForce;
+            float brakeMultiplier = isHandbrake ? 1 : brakeReducer; 
+            leftWheelCollider.brakeTorque = configHandbrakeForce * brakeMultiplier;
+            rightWheelCollider.brakeTorque = configHandbrakeForce * brakeMultiplier;
         }
 
         public bool IsGrounded()

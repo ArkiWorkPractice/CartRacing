@@ -679,6 +679,7 @@ MonoBehaviour:
     rightWheelCollider: {fileID: 4544260159603219593}
     leftWheelTransform: {fileID: 4896808293830496876}
     rightWheelTransform: {fileID: 8824799268980192348}
+    brakeReducer: 0.7
     hasMotor: 1
     canSteer: 1
     hasHandbrake: 0
@@ -686,14 +687,12 @@ MonoBehaviour:
     rightWheelCollider: {fileID: 3069097707978575400}
     leftWheelTransform: {fileID: 637833001468296512}
     rightWheelTransform: {fileID: 8591505350562386531}
+    brakeReducer: 0.3
     hasMotor: 1
     canSteer: 0
     hasHandbrake: 1
   carRigidbody: {fileID: 1513440064929857279}
   centerOfMass: {fileID: 8938775164377777655}
-  cameraOffset: {x: 0, y: 4, z: -2}
-  cameraTurnAngleMultiplier: 2
-  cameraSpeed: 2
 --- !u!114 &9025591402469441689
 MonoBehaviour:
   m_ObjectHideFlags: 0

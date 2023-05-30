@@ -12,6 +12,7 @@ namespace Services.Input
 
         private float _direction;
         private float _turn;
+        private bool _isHandbrakeActivated;
         
         public event Action<bool> HandbrakeStateChanged;
         public event Action DirectionChanged;
@@ -26,11 +27,6 @@ namespace Services.Input
             
             SubscribePlayerInputs();
             SubscribeUIInputs();
-        }
-        
-        private void OnEnable()
-        {
-            
         }
 
         private void OnDisable()
@@ -86,17 +82,20 @@ namespace Services.Input
 
         private void OnHandbrakePerformed(InputAction.CallbackContext obj)
         {
+            _isHandbrakeActivated = true;
             HandbrakeStateChanged?.Invoke(true);
         }
 
         private void OnHandBrakeCanceled(InputAction.CallbackContext obj)
         {
+            _isHandbrakeActivated = false;
             HandbrakeStateChanged?.Invoke(false);
         }
 
         public float GetDirection() => _direction;
         public float GetTurn() => _turn;
 
+        public bool GetHandbrakeStatus() => _isHandbrakeActivated;
        
 
         public void Dispose()
@@ -104,5 +103,7 @@ namespace Services.Input
             _actions.Disable();
             _actions?.Dispose();
         }
+
+        
     }
 }

@@ -41,6 +41,7 @@ namespace CarModule
         {
             _car.Reinitialize();
             _car.ResetPosition(_lastPosition);
+            _car.Reinitialize();
             
             Debug.Log("restored");
         }
