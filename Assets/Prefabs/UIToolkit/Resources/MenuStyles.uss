@@ -1,0 +1,21 @@
+.menu-button {
+    font-size: 75px;
+    -unity-font-style: normal;
+    background-color: rgba(0, 0, 0, 0);
+    border-left-color: rgba(0, 0, 0, 0);
+    border-right-color: rgba(0, 0, 0, 0);
+    border-top-color: rgba(0, 0, 0, 0);
+    border-bottom-color: rgba(0, 0, 0, 0);
+    margin-top: 10px;
+    margin-bottom: 10px;
+    -unity-font: url('project://database/Assets/External/FPSFont/Square-Black.ttf?fileID=12800000&guid=d7cffddcbc0cc8f4ebe6e28eb9804082&type=3#Square-Black');
+    -unity-font-definition: url('project://database/Assets/Prefabs/UIToolkit/Square-Black%20SDF.asset?fileID=11400000&guid=7dccc99780ab472478bb64131e59bda0&type=2#Square-Black SDF');
+    transition-duration: 0.2s;
+}
+
+.menu-button:hover {
+    color: rgba(255, 255, 255, 255);
+    font-size: 85px;
+    rotate: -10deg;
+    transition-duration: 0.3s;
+}

@@ -1,0 +1,7 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <ui:VisualElement style="flex-grow: 1;">
+        <ui:VisualElement name="HealthBar" style="flex-direction: column; height: 120px; background-color: rgba(0, 0, 0, 0.52);">
+            <ui:Label text="Health: 100" display-tooltip-when-elided="true" name="HealthValue" style="width: 100%; height: 100%; font-size: 80px; -unity-text-align: middle-center; -unity-font-definition: url(&apos;project://database/Assets/External/FPSFont/Square-Black%20SDF.asset?fileID=11400000&amp;guid=7dccc99780ab472478bb64131e59bda0&amp;type=2#Square-Black SDF&apos;); color: rgba(255, 255, 255, 255); text-shadow: 0 0 0 rgba(202, 202, 202, 255); letter-spacing: 5px;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
