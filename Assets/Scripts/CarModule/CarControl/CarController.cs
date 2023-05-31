@@ -26,6 +26,7 @@ namespace CarModule.CarControl
         private float _currentSpeed;
         private float _currentSteeringAngle;
         private bool _carIsGrounded;
+        private AnimationCurve _steeringLimitCurve;
         private CarMovingData _movingData;
         public CarMovingData MovingData => _movingData;
 
@@ -42,6 +43,8 @@ namespace CarModule.CarControl
         public void Initialize(CarConfig config)
         {
             _config = config;
+            _steeringLimitCurve = new AnimationCurve(new Keyframe(_config.SteeringCurveStart.x, _config.SteeringCurveStart.y), 
+                                                              new Keyframe(_config.SteeringCurveEnd.x, _config.SteeringCurveEnd.y));
             SaveMovingData();
         }
 
@@ -50,6 +53,8 @@ namespace CarModule.CarControl
             _input = ServiceLocator.Instance.GetService<InputService>();
 
             carRigidbody.centerOfMass = centerOfMass.localPosition;
+
+            
         }
 
         private void Update()
@@ -66,8 +71,8 @@ namespace CarModule.CarControl
 
         private void ApplySteering()
         {
-            
-            _currentSteeringAngle = _turnInput * _config.SteeringAngle;
+            var time = Mathf.InverseLerp(_config.MinSpeed, _config.MaxSpeed, _currentSpeed);
+            _currentSteeringAngle = _turnInput * _config.SteeringAngle * _steeringLimitCurve.Evaluate(time);
 
             foreach (var axle in axles)
             {

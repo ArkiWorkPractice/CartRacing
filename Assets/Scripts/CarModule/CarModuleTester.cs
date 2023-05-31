@@ -1,3 +1,4 @@
+using CameraLogic;
 using CarModule.CarControl;
 using Factories;
 using ServiceLocatorModule;

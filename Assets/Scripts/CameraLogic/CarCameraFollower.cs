@@ -2,7 +2,7 @@
 
 namespace CarModule.CarControl
 {
-    public class CameraController : MonoBehaviour
+    public class CarCameraFollower : MonoBehaviour 
     {
         [SerializeField] Vector3 offset;
         [SerializeField] int cameraSmoothing;

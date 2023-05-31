@@ -9,6 +9,8 @@ namespace Models.CarModule
 
         [SerializeField] private float maxMotorTorque;
         [SerializeField] private AnimationCurve steeringCurve;
+        [SerializeField] private Vector2 steeringCurveStart;
+        [SerializeField] private Vector2 steeringCurveEnd;
         [SerializeField] private float steeringAngle;
         [SerializeField] private float brakeForce;
         
@@ -17,8 +19,10 @@ namespace Models.CarModule
         [SerializeField] private int maxHealth;
         [SerializeField] private float directionSmoothing;
         [SerializeField] private float turnSmoothing;
-        
-        public CarConfig(CarConfig carConfig)
+        [SerializeField] private float minSpeed;
+        [SerializeField] private float maxSpeed;
+
+            public CarConfig(CarConfig carConfig)
         {   
             maxMotorTorque = carConfig.maxMotorTorque;
             brakeForce = carConfig.brakeForce;
@@ -30,6 +34,12 @@ namespace Models.CarModule
             delayBetweenSaving = carConfig.delayBetweenSaving;
             directionSmoothing = carConfig.directionSmoothing;
             turnSmoothing = carConfig.turnSmoothing;
+
+            minSpeed = carConfig.minSpeed;
+            maxSpeed = carConfig.maxSpeed;
+
+            steeringCurveStart = carConfig.steeringCurveStart;
+            steeringCurveEnd = carConfig.steeringCurveEnd;
         }   
 
         
@@ -40,9 +50,13 @@ namespace Models.CarModule
         public AnimationCurve SteeringCurve => steeringCurve;
         public float SteeringAngle => steeringAngle;
         public int DelayBetweenSaving => delayBetweenSaving;
-        public float DirectionSmoothing => directionSmoothing;
+        public float MinSpeed => minSpeed;
 
-        public float TurnSmoothing => turnSmoothing;
+        public float MaxSpeed => maxSpeed;
+        public Vector2 SteeringCurveStart => steeringCurveStart;
+
+        public Vector2 SteeringCurveEnd => steeringCurveEnd;
+        
 
         public CarConfig Copy()
         {
