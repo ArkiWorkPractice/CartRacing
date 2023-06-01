@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Test.Car
+namespace Testing.LevelDesignModuleTests.Car
 {
     public class Car : MonoBehaviour, IDamageable
     {

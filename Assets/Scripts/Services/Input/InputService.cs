@@ -24,6 +24,7 @@ namespace Services.Input
         public event Action DirectionChanged;
         public event Action CarMoveCanceled;
         public event Action EscapePressed;
+        public event Action RespawnClicked;
 
         private void Awake()
         {
@@ -69,6 +70,13 @@ namespace Services.Input
 
             _actions.player.handbrake.performed += OnHandbrakePerformed;
             _actions.player.handbrake.canceled += OnHandBrakeCanceled;
+
+            _actions.player.respawn.performed += OnRespawnClicked;
+        }
+
+        private void OnRespawnClicked(InputAction.CallbackContext obj)
+        {
+            RespawnClicked?.Invoke();
         }
 
         private void OnTurnCanceled(InputAction.CallbackContext obj)

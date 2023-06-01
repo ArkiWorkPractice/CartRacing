@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using Models.CarModule;
+using ServiceLocatorModule;
 using ServiceLocatorModule.Interfaces;
+using Services.Input;
 using UnityEngine;
 
 namespace CarModule
@@ -15,15 +17,6 @@ namespace CarModule
         private Coroutine _saverCoroutine;
         private bool _savingInProcess;
 
-
-        private void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.R))
-            {
-                RestoreData();
-            }
-        }
-
         private void OnDisable()
         {
             StopSaving();
@@ -35,6 +28,8 @@ namespace CarModule
             _delayBetweenSaving = delayBetweenSaving;
             _savingInProcess = false;
             _lastPosition = _car.GetMovingData();
+
+            ServiceLocator.Instance.GetService<InputService>().RespawnClicked += RestoreData;
         }
 
         public void RestoreData()

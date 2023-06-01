@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEngine;
 
 namespace CarModule.CarComponents
 {
@@ -34,7 +35,7 @@ namespace CarModule.CarComponents
             {
                 _currentHealth -= valueToSubtract;
             }
-
+            Debug.Log(_currentHealth);
             HealthValueChanged?.Invoke(_currentHealth);   
         }
 

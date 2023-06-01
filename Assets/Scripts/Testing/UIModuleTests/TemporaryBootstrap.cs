@@ -1,10 +1,9 @@
-﻿using ServiceLocatorModule;
-using EventBusModule;
-using UnityEngine;
+﻿using EventBusModule;
+using ServiceLocatorModule;
 using UI;
-using Assets.Scripts.EventBusModule;
+using UnityEngine;
 
-namespace Assets.Scripts
+namespace Testing.UIModuleTests
 {
     public class TemporaryBootstrap : MonoBehaviour
     {

@@ -5,7 +5,6 @@ using ServiceLocatorModule;
 using EventBusModule;
 using EventBusModule.Interfaces;
 using ServiceLocatorModule.Interfaces;
-using Assets.Scripts.EventBusModule;
 
 namespace UI
 {

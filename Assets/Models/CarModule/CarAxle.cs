@@ -12,16 +12,20 @@ namespace Models.CarModule
         [SerializeField] private Transform rightWheelTransform;
         [SerializeField] private float brakeReducer;
 
-        public bool hasMotor;
-        public bool canSteer;
-        public bool hasHandbrake;
+        [SerializeField] private bool hasMotor;
+        [SerializeField] private bool canSteer;
+        [SerializeField] private bool hasHandbrake;
         
+        public bool HasMotor => hasMotor;
+        public bool CanSteer => canSteer;
+        public bool HasHandbrake => hasHandbrake;
+
         public void ApplyLocalPositionToVisuals()
         {
             leftWheelCollider.GetWorldPose(out var position, out var rotation);
             leftWheelTransform.position = position;
             leftWheelTransform.rotation = rotation;
-            
+
             rightWheelCollider.GetWorldPose(out position, out rotation);
             rightWheelTransform.position = position;
             rightWheelTransform.rotation = rotation;
@@ -41,7 +45,7 @@ namespace Models.CarModule
 
         public void ApplyBrakePower(float configHandbrakeForce, bool isHandbrake = false)
         {
-            float brakeMultiplier = isHandbrake ? 1 : brakeReducer; 
+            float brakeMultiplier = isHandbrake ? 1 : brakeReducer;
             leftWheelCollider.brakeTorque = configHandbrakeForce * brakeMultiplier;
             rightWheelCollider.brakeTorque = configHandbrakeForce * brakeMultiplier;
         }

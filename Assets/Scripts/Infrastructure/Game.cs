@@ -4,12 +4,16 @@ namespace Infrastructure
 {
     public class Game
     {
-        public GameStateMachine StateMachine { get; private set; }
-        
+        private readonly GameStateMachine _stateMachine;
+
         public Game()
         {
-            StateMachine = new GameStateMachine();
-            StateMachine.Enter<BootstrapState>();
+            _stateMachine = new GameStateMachine();
+        }
+
+        public void Start()
+        {
+            _stateMachine.Enter<BootstrapState>();
         }
     }
 }

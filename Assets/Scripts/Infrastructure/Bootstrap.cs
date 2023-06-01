@@ -8,23 +8,23 @@ namespace Infrastructure
     [DefaultExecutionOrder(100)]
     public class Bootstrap : MonoBehaviour
     {
-		[SerializeField] private ConfigsProvider configsProvider;
-        [SerializeField] private PrefabProvider prefabProvider;
-		
-		private const string GameScene = "Game";
-		
+        [SerializeField] private ConfigsProvider configsProvider;
+        [SerializeField] private PrefabsProvider prefabsProvider;
+
+        [SerializeField] private string gameScene;
+
         private Game _game;
 
         private void Awake()
         {
-            ServiceLocator.Instance.RegisterService(configsProvider);
-            ServiceLocator.Instance.RegisterService(prefabProvider);
-            
-            _game = new Game();
-            
             DontDestroyOnLoad(this);
-            
-            SceneManager.LoadScene(GameScene);
+
+            ServiceLocator.Instance.RegisterService(configsProvider);
+            ServiceLocator.Instance.RegisterService(prefabsProvider);
+
+            _game = new Game();
+
+            SceneManager.LoadScene(gameScene);
         }
     }
 }

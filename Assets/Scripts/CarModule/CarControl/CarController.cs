@@ -53,8 +53,6 @@ namespace CarModule.CarControl
             _input = ServiceLocator.Instance.GetService<InputService>();
 
             carRigidbody.centerOfMass = centerOfMass.localPosition;
-
-            
         }
 
         private void Update()
@@ -76,7 +74,7 @@ namespace CarModule.CarControl
 
             foreach (var axle in axles)
             {
-                if (axle.canSteer)
+                if (axle.CanSteer)
                 {
                     axle.ApplySteering(_currentSteeringAngle);
                 }
@@ -87,7 +85,7 @@ namespace CarModule.CarControl
         {
             foreach (var axle in axles)
             {
-                if (_handbrake && axle.hasHandbrake)
+                if (_handbrake && axle.HasHandbrake)
                 {
                     axle.ApplyBrakePower(_config.BrakeForce, true);
                 }
@@ -102,7 +100,7 @@ namespace CarModule.CarControl
         {
             foreach (var axle in axles)
             {
-                if (axle.hasMotor)
+                if (axle.HasMotor)
                 {
                     _currentMotorTorque = _config.MaxMotorTorque * _gasInput;
                     axle.ApplyMotorTorque(_currentMotorTorque);
@@ -152,7 +150,6 @@ namespace CarModule.CarControl
             info.Append($"\nSteering: {_currentSteeringAngle}");
             info.Append($"\nDirection input: {_gasInput}");
             info.Append($"\nTurn input: {_turnInput}");
-            //info.Append($"\nWheel RPM: {axles[0].leftWheelCollider.rpm}");
 
             infoText.text = info.ToString();
         }
@@ -184,8 +181,7 @@ namespace CarModule.CarControl
             _currentMotorTorque = 0;
             _currentSpeed = 0;
             _currentSteeringAngle = 0;
-
-            // input
+            
             _brakeInput = 0;
             _gasInput = 0;
             _turnInput = 0;
@@ -195,7 +191,6 @@ namespace CarModule.CarControl
                 axle.ApplySteering(0);
                 axle.ApplyMotorTorque(0);
             }
-
 
             carRigidbody.velocity = Vector3.zero;
         }

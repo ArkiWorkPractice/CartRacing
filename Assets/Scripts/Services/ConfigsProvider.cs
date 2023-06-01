@@ -13,7 +13,7 @@ namespace Services
 
         [SerializeField] private ObstacleSpawnerConfig obstacleSpawnerConfig;
 
-        public void Awake()
+        private void Awake()
         {
             ServiceLocator.Instance.RegisterService(this);
         }

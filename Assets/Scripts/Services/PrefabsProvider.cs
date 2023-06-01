@@ -10,7 +10,7 @@ using UnityEngine;
 namespace Services
 {
     [Serializable]
-    public class PrefabProvider : IService
+    public class PrefabsProvider : IService
     {
         [SerializeField] private PrefabsContainerSO prefabsContainerSo;
 
@@ -18,7 +18,7 @@ namespace Services
         public Level[] GetLevels() => prefabsContainerSo.Levels;
         public Level GetLevel(int index) => prefabsContainerSo.Levels.First(l => l.GetLevelId()==index);
 
-        public void Awake()
+        private void Awake()
         {
             ServiceLocator.Instance.RegisterService(this);
         }

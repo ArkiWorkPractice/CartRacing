@@ -19,27 +19,45 @@ namespace CarModule
         private IDamageable _damageable;
         private Health _health;
 
+        private bool _isImmortal;
+        private float _currentImmortalTime;
+
         public event Action<int> HealthChanged;
         public event Action Died;
 
-        private CancellationTokenSource _immortalCancellationTokenSource;
 
-        public void Start()
+        private void Start()
         {
             InitializeCar();
 
+            _isImmortal = false;
             carSaver.Initialize(this, _config.DelayBetweenSaving);
             carSaver.StartSaving();
+        }
+
+        private void Update()
+        {
+            ImmortalCheck();
+        }
+
+        private void ImmortalCheck()
+        {
+            if (_isImmortal)
+            {
+                _currentImmortalTime -= Time.deltaTime;
+
+                if (_currentImmortalTime <= 0) CancelImmortal();
+            }
         }
 
         private void InitializeCar()
         {
             _config = carConfigSo.GetConfig();
-            
+
             _health = new Health(_config.MaxHealth);
             _health.Died += OnDied;
             _health.HealthValueChanged += OnHealthChanged;
-            
+
             _damageable = new SimpleDamageable(_health);
             carController.Initialize(_config);
         }
@@ -57,32 +75,26 @@ namespace CarModule
         public void MakeDamage(int damage)
         {
             _damageable.MakeDamage(damage);
-            _immortalCancellationTokenSource = new CancellationTokenSource();
-            Task.Run(() => Immortal(_immortalCancellationTokenSource.Token));
+
+            if (!_isImmortal)
+            {
+                _isImmortal = true;
+                _damageable = new NonDamageable();
+                _currentImmortalTime = _config.ImmortalTimeInMilliseconds;
+            }
         }
-
-        private async Task Immortal(CancellationToken token)
-        {
-            _damageable = new NonDamageable();
-
-            await Task.Delay(_config.ImmortalTimeInMilliseconds, token);
-
-            _damageable = new SimpleDamageable(_health);
-        }
-
-        
 
         private void CancelImmortal()
         {
-            _immortalCancellationTokenSource?.Cancel(false);
             _damageable = new SimpleDamageable(_health);
+            _isImmortal = false;
         }
 
         public CarMovingData GetMovingData()
         {
             return carController.MovingData;
         }
-        
+
         private void OnDisable()
         {
             CancelImmortal();

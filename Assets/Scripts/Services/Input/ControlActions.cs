@@ -53,6 +53,15 @@ public partial class @ControlActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""respawn"",
+                    ""type"": ""Button"",
+                    ""id"": ""c36f9e0f-7a10-43a9-8580-0692d7d56554"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -132,6 +141,17 @@ public partial class @ControlActions: IInputActionCollection2, IDisposable
                     ""action"": ""turn"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1c29674d-fc5e-48bb-9ddb-b81feb01608f"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""respawn"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -171,6 +191,7 @@ public partial class @ControlActions: IInputActionCollection2, IDisposable
         m_player_handbrake = m_player.FindAction("handbrake", throwIfNotFound: true);
         m_player_direction = m_player.FindAction("direction", throwIfNotFound: true);
         m_player_turn = m_player.FindAction("turn", throwIfNotFound: true);
+        m_player_respawn = m_player.FindAction("respawn", throwIfNotFound: true);
         // ui
         m_ui = asset.FindActionMap("ui", throwIfNotFound: true);
         m_ui_escape = m_ui.FindAction("escape", throwIfNotFound: true);
@@ -238,6 +259,7 @@ public partial class @ControlActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_player_handbrake;
     private readonly InputAction m_player_direction;
     private readonly InputAction m_player_turn;
+    private readonly InputAction m_player_respawn;
     public struct PlayerActions
     {
         private @ControlActions m_Wrapper;
@@ -245,6 +267,7 @@ public partial class @ControlActions: IInputActionCollection2, IDisposable
         public InputAction @handbrake => m_Wrapper.m_player_handbrake;
         public InputAction @direction => m_Wrapper.m_player_direction;
         public InputAction @turn => m_Wrapper.m_player_turn;
+        public InputAction @respawn => m_Wrapper.m_player_respawn;
         public InputActionMap Get() { return m_Wrapper.m_player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -263,6 +286,9 @@ public partial class @ControlActions: IInputActionCollection2, IDisposable
             @turn.started += instance.OnTurn;
             @turn.performed += instance.OnTurn;
             @turn.canceled += instance.OnTurn;
+            @respawn.started += instance.OnRespawn;
+            @respawn.performed += instance.OnRespawn;
+            @respawn.canceled += instance.OnRespawn;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -276,6 +302,9 @@ public partial class @ControlActions: IInputActionCollection2, IDisposable
             @turn.started -= instance.OnTurn;
             @turn.performed -= instance.OnTurn;
             @turn.canceled -= instance.OnTurn;
+            @respawn.started -= instance.OnRespawn;
+            @respawn.performed -= instance.OnRespawn;
+            @respawn.canceled -= instance.OnRespawn;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -344,6 +373,7 @@ public partial class @ControlActions: IInputActionCollection2, IDisposable
         void OnHandbrake(InputAction.CallbackContext context);
         void OnDirection(InputAction.CallbackContext context);
         void OnTurn(InputAction.CallbackContext context);
+        void OnRespawn(InputAction.CallbackContext context);
     }
     public interface IUiActions
     {

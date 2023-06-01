@@ -4,14 +4,14 @@ using Services;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Test
+namespace Testing.LevelDesignModuleTests
 {
     public class Tester : MonoBehaviour
     {
         [SerializeField] private Button button;
     
         [SerializeField] private ConfigsProvider configsProvider;
-        [SerializeField] private PrefabProvider prefabProvider;
+        [SerializeField] private PrefabsProvider prefabsProvider;
         private LevelLoader _level;
         private ObstacleFactory _obstacleFactory;
         [SerializeField] private int levelNumber;
@@ -19,8 +19,8 @@ namespace Test
         private void Awake()
         {
             ServiceLocator.Instance.RegisterService(configsProvider);
-            ServiceLocator.Instance.RegisterService(prefabProvider);
-            ServiceLocator.Instance.RegisterService(new ObstacleFactory(prefabProvider.GetObstacles(),configsProvider.ObstacleSpawnerConfig.QuantityForEachObject));
+            ServiceLocator.Instance.RegisterService(prefabsProvider);
+            ServiceLocator.Instance.RegisterService(new ObstacleFactory(prefabsProvider.GetObstacles(),configsProvider.ObstacleSpawnerConfig.QuantityForEachObject));
         }
 
         public void Start()
