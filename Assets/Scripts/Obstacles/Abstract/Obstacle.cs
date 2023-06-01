@@ -1,6 +1,6 @@
 using System;
 using Obstacles.Interface;
-using Test;
+using Testing.LevelDesignModuleTests;
 using UnityEngine;
 
 namespace Obstacles.Abstract

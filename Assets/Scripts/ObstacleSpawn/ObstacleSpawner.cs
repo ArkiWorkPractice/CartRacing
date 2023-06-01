@@ -18,7 +18,7 @@ namespace ObstacleSpawn
 
         public ObstacleSpawner(ObstacleSpawnPoint[] spawnPoints)
         {
-            _obstacles = ServiceLocator.Instance.GetService<PrefabProvider>().GetObstacles();
+            _obstacles = ServiceLocator.Instance.GetService<PrefabsProvider>().GetObstacles();
             _obstacleFactory = ServiceLocator.Instance.GetService<ObstacleFactory>();
             
             for (int i = 0; i < spawnPoints.Length; i++)

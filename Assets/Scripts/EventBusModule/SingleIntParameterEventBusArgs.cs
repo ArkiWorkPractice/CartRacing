@@ -4,7 +4,7 @@ namespace EventBusModule
 {
     public class SingleIntParameterEventBusArgs : IEventBusArgs
     {
-        public int Number;
+        public int Number { get; }
 
         public SingleIntParameterEventBusArgs(int number) : base()
         {

@@ -7,7 +7,7 @@ namespace ServiceLocatorModule
     public class ServiceLocator
     {
         public static ServiceLocator Instance { get; } = new ServiceLocator();
-        private Dictionary<Type, IService> _services = new Dictionary<Type, IService>();
+        private readonly Dictionary<Type, IService> _services = new Dictionary<Type, IService>();
 
         public T GetService<T>() where T : class, IService
         {
@@ -22,6 +22,11 @@ namespace ServiceLocatorModule
         public void RegisterService<T>(T service) where T : class, IService
         {
             _services.TryAdd(typeof(T), service);
+        }
+
+        public void UnregisterService<T>() where T : class, IService
+        {
+            _services.Remove(typeof(T));
         }
     }
 }

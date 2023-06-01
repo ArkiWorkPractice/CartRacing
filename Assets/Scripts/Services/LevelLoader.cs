@@ -8,19 +8,19 @@ namespace Services
 {
     public class LevelLoader : IService
     {
-        private readonly PrefabProvider _prefabProvider;
+        private readonly PrefabsProvider _prefabsProvider;
 
         private readonly LevelFactory _levelFactory;
 
         public LevelLoader()
         {
-            _prefabProvider = ServiceLocator.Instance.GetService<PrefabProvider>();
+            _prefabsProvider = ServiceLocator.Instance.GetService<PrefabsProvider>();
             _levelFactory = new LevelFactory();
         }
 
         public void LoadLevel(int levelIndex)
         {
-            Level level = _levelFactory.Create(_prefabProvider.GetLevel(levelIndex));
+            Level level = _levelFactory.Create(_prefabsProvider.GetLevel(levelIndex));
             level.StartLevel();
             /*
              * PlayerFactory = ServiceLocator;

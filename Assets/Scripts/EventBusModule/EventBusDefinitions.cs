@@ -1,4 +1,4 @@
-﻿namespace Assets.Scripts.EventBusModule
+﻿namespace EventBusModule
 {
     public static class EventBusDefinitions
     {
