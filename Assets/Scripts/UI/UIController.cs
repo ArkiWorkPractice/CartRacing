@@ -77,7 +77,7 @@ namespace UI
         private void LoadPauseMenu(IEventBusArgs e)
         {
             uiDocument.visualTreeAsset = pauseAsset;
-            var visualElement = uiDocument.rootVisualElement.Q<VisualElement>("PauseMenuWRapper");
+            var visualElement = uiDocument.rootVisualElement.Q<VisualElement>("PauseMenuWrapper");
 
             visualElement.Q<Button>("ResumeButton").clicked += () => _eventBus.Raise(EventBusDefinitions.ResumeGameActionKey, new EventBusArgs());
             visualElement.Q<Button>("RestartButton").clicked += () => _eventBus.Raise(EventBusDefinitions.RestartGameActionKey, new EventBusArgs());
