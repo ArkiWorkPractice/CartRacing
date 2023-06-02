@@ -1,3 +1,5 @@
+using EventBusModule;
+using EventBusModule.Interfaces;
 using Factories;
 using Levels;
 using ObstacleSpawn;
@@ -18,9 +20,9 @@ namespace Services
             _levelFactory = new LevelFactory();
         }
 
-        public void LoadLevel(int levelIndex)
+        public void LoadLevel(IEventBusArgs args)
         {
-            Level level = _levelFactory.Create(_prefabsProvider.GetLevel(levelIndex));
+            Level level = _levelFactory.Create(_prefabsProvider.GetLevel(((SingleIntParameterEventBusArgs)args).Number));
             level.StartLevel();
             /*
              * PlayerFactory = ServiceLocator;

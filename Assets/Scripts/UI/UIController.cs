@@ -71,7 +71,8 @@ namespace UI
 
         private void UpdateHealthValue(IEventBusArgs e)
         {
-            uiDocument.rootVisualElement.Q<Label>("HealthValue").text = $"Health: {((SingleIntParameterEventBusArgs)e).Number}";
+            if(uiDocument.rootVisualElement.name == playerHudAsset.name)
+                uiDocument.rootVisualElement.Q<Label>("HealthValue").text = $"Health: {((SingleIntParameterEventBusArgs)e).Number}";
         }
 
         private void LoadPauseMenu(IEventBusArgs e)

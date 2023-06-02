@@ -26,7 +26,7 @@ namespace Testing.LevelDesignModuleTests
         public void Start()
         {
             _level = new LevelLoader();
-            button.onClick.AddListener(() => _level.LoadLevel(levelNumber));
+            
         }
 
         public void EnterBootstrapState()

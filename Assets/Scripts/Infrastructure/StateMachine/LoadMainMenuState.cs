@@ -10,11 +10,16 @@ namespace Infrastructure.StateMachine
     {
         public void Enter()
         {
+            var eventBus = ServiceLocator.Instance.GetService<EventBus>();
             var prefabsProvider = ServiceLocator.Instance.GetService<PrefabsProvider>();
+            
             UIController uiController = Object.Instantiate(prefabsProvider.GetUIController());
-            uiController.Initialize();
             ServiceLocator.Instance.RegisterService(uiController);
-            ServiceLocator.Instance.GetService<EventBus>().Raise(EventBusDefinitions.LoadMainMenuActionKey, new EventBusArgs());
+            uiController.Initialize();
+            eventBus.Raise(EventBusDefinitions.LoadMainMenuActionKey, new EventBusArgs());
+            
+            var levelLoader = new LevelLoader();
+            eventBus.Subscribe<SingleIntParameterEventBusArgs>(EventBusDefinitions.LoadLevelActionKey, levelLoader.LoadLevel);
         }
 
         public void Exit()

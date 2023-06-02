@@ -1,3 +1,4 @@
+using EventBusModule;
 using ServiceLocatorModule;
 using Services;
 using UnityEngine;
@@ -23,6 +24,7 @@ namespace Infrastructure
         {
             ServiceLocator.Instance.RegisterService(configsProvider);
             ServiceLocator.Instance.RegisterService(prefabsProvider);
+            ServiceLocator.Instance.RegisterService(new EventBus());
         }
     }
 }
