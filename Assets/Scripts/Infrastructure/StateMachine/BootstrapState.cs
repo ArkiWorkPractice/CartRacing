@@ -1,4 +1,5 @@
-﻿using UnityEngine.SceneManagement;
+﻿using EventBusModule;
+using ServiceLocatorModule;
 
 namespace Infrastructure.StateMachine
 {
@@ -6,12 +7,13 @@ namespace Infrastructure.StateMachine
     {
         public void Enter()
         {
-            SceneManager.LoadScene("Game");
+            EventBus eventBus = new EventBus();
+
+            ServiceLocator.Instance.RegisterService(eventBus);
         }
 
         public void Exit()
         {
-            
         }
     }
 }

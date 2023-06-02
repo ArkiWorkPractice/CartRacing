@@ -1,19 +1,17 @@
 ﻿using Infrastructure.StateMachine;
+using UnityEngine;
 
 namespace Infrastructure
 {
-    public class Game
+    public class Game : MonoBehaviour
     {
-        private readonly GameStateMachine _stateMachine;
+        private GameStateMachine _stateMachine;
 
-        public Game()
+        private void Awake()
         {
             _stateMachine = new GameStateMachine();
-        }
-
-        public void Start()
-        {
             _stateMachine.Enter<BootstrapState>();
+            _stateMachine.Enter<LoadMainMenuState>();
         }
     }
 }

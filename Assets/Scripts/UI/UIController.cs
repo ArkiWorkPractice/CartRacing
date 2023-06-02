@@ -1,23 +1,25 @@
-using System;
 using UnityEngine;
 using UnityEngine.UIElements;
 using ServiceLocatorModule;
 using EventBusModule;
 using EventBusModule.Interfaces;
 using ServiceLocatorModule.Interfaces;
+using Unity.VisualScripting;
+using EventBus = EventBusModule.EventBus;
 
 namespace UI
 {
     public class UIController : MonoBehaviour, IService
     {
-        [Header("Game menus")]
+        [Header("Menu pages")]
         [SerializeField] private VisualTreeAsset mainMenuAsset;
         [SerializeField] private VisualTreeAsset selectLevelMenuAsset;
         [SerializeField] private VisualTreeAsset pauseAsset;
         [SerializeField] private VisualTreeAsset endGameAsset;
         [SerializeField] private VisualTreeAsset playerHudAsset;
-
-        private UIDocument _uiDocument;
+        [Header("Main document")]
+        [SerializeField] private UIDocument uiDocument;
+        
         private EventBus _eventBus;
 
         private void Awake()
@@ -27,7 +29,6 @@ namespace UI
 
         public void Initialize()
         {
-            _uiDocument = GetComponent<UIDocument>();
             _eventBus = ServiceLocator.Instance.GetService<EventBus>();
 
             _eventBus.Subscribe<EventBusArgs>(EventBusDefinitions.StartGameActionKey, LoadMainMenu);
@@ -45,8 +46,8 @@ namespace UI
 
         private void LoadMainMenu(IEventBusArgs e)
         {
-            _uiDocument.visualTreeAsset = mainMenuAsset;
-            var visualElement = _uiDocument.rootVisualElement.Q<VisualElement>("MainMenuItemsWrapper");
+            uiDocument.visualTreeAsset = mainMenuAsset;
+            var visualElement = uiDocument.rootVisualElement.Q<VisualElement>("MainMenuItemsWrapper");
 
             visualElement.Q<Button>("PlayButton").clicked += () => _eventBus.Raise(EventBusDefinitions.LoadSelectLevelMenuActionKey, new EventBusArgs());
             visualElement.Q<Button>("ExitButton").clicked += () => _eventBus.Raise(EventBusDefinitions.ExitFromGameActionKey, new EventBusArgs());
@@ -54,8 +55,8 @@ namespace UI
 
         private void LoadSelectLevelMenu(IEventBusArgs e)
         {
-            _uiDocument.visualTreeAsset = selectLevelMenuAsset;
-            var visualElement = _uiDocument.rootVisualElement.Q<VisualElement>("SelectLevelItemsWrapper");
+            uiDocument.visualTreeAsset = selectLevelMenuAsset;
+            var visualElement = uiDocument.rootVisualElement.Q<VisualElement>("SelectLevelItemsWrapper");
 
             visualElement.Q<Button>("BackToMenuButton").clicked += () => _eventBus.Raise(EventBusDefinitions.LoadMainMenuActionKey, new EventBusArgs());
             visualElement.Q<LevelButton>("Level0Button").clicked += () => _eventBus.Raise(EventBusDefinitions.LoadLevelActionKey, new SingleIntParameterEventBusArgs(visualElement.Q<LevelButton>("Level0Button").LevelNumber));
@@ -65,18 +66,18 @@ namespace UI
 
         private void LoadPlayerHud(IEventBusArgs e)
         {
-            _uiDocument.visualTreeAsset = playerHudAsset;
+            uiDocument.visualTreeAsset = playerHudAsset;
         }
 
         private void UpdateHealthValue(IEventBusArgs e)
         {
-            _uiDocument.rootVisualElement.Q<Label>("HealthValue").text = $"Health: {((SingleIntParameterEventBusArgs)e).Number}";
+            uiDocument.rootVisualElement.Q<Label>("HealthValue").text = $"Health: {((SingleIntParameterEventBusArgs)e).Number}";
         }
 
         private void LoadPauseMenu(IEventBusArgs e)
         {
-            _uiDocument.visualTreeAsset = pauseAsset;
-            var visualElement = _uiDocument.rootVisualElement.Q<VisualElement>("PauseMenuWRapper");
+            uiDocument.visualTreeAsset = pauseAsset;
+            var visualElement = uiDocument.rootVisualElement.Q<VisualElement>("PauseMenuWRapper");
 
             visualElement.Q<Button>("ResumeButton").clicked += () => _eventBus.Raise(EventBusDefinitions.ResumeGameActionKey, new EventBusArgs());
             visualElement.Q<Button>("RestartButton").clicked += () => _eventBus.Raise(EventBusDefinitions.RestartGameActionKey, new EventBusArgs());
@@ -85,9 +86,9 @@ namespace UI
 
         private void LoadEndGameMenu(IEventBusArgs e)
         {
-            _uiDocument.visualTreeAsset = endGameAsset;
-            var visualElement = _uiDocument.rootVisualElement.Q<VisualElement>("EndGameMenuWrapper");
-
+            uiDocument.visualTreeAsset = endGameAsset;
+            var visualElement = uiDocument.rootVisualElement.Q<VisualElement>("EndGameMenuWrapper");
+            
             visualElement.Q<Button>("RestartButton").clicked += () => _eventBus.Raise(EventBusDefinitions.RestartGameActionKey, new EventBusArgs());
             visualElement.Q<Button>("ExitButton").clicked += () => _eventBus.Raise(EventBusDefinitions.LoadMainMenuActionKey, new EventBusArgs());
         }

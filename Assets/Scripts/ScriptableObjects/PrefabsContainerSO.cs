@@ -1,5 +1,6 @@
 ﻿using Levels;
 using Obstacles.Abstract;
+using UI;
 using UnityEngine;
 
 namespace ScriptableObjects
@@ -10,8 +11,11 @@ namespace ScriptableObjects
         public Obstacle[] Obstacles => obstacles;
 
         public Level[] Levels => levels;
+        
+        public UIController UIPrefab => uiController;
 
         [SerializeField] private Obstacle[] obstacles;
         [SerializeField] private Level[] levels;
+        [SerializeField] private UIController uiController;
     }
 }

@@ -183,8 +183,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   configsProvider:
     obstacleSpawnerConfig: {fileID: 11400000, guid: 88d791a4fe94ce543a1496d27916ff89, type: 2}
-  prefabProvider:
+  prefabsProvider:
     prefabsContainerSo: {fileID: 11400000, guid: ba8a208e8cdfd3d41add26aeba127824, type: 2}
+  gameScene: Game
 --- !u!1 &970365277
 GameObject:
   m_ObjectHideFlags: 0

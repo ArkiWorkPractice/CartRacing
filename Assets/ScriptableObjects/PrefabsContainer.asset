@@ -23,4 +23,4 @@ MonoBehaviour:
   - {fileID: -5903636675809423688, guid: 4230f493c815f6149ad2c44cedf4f1ce, type: 3}
   - {fileID: -3435507988219956769, guid: 69e72459b9820a04e9e80997612b3ac4, type: 3}
   - {fileID: -3176566106823979183, guid: cf71b4eee27b3ba4bb4e945f6d686127, type: 3}
-  car: {fileID: 7345821726329242898, guid: 7b906345e411f1c4185ebc0a91fd97dc, type: 3}
+  uiController: {fileID: 1122807592594587149, guid: e366d55265b4ec748ae826455e857f83, type: 3}

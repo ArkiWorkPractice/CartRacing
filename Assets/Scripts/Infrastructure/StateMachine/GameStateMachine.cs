@@ -5,14 +5,15 @@ namespace Infrastructure.StateMachine
 {
     public class GameStateMachine
     {
-        private Dictionary<Type, IGameState> _states;
+        private readonly Dictionary<Type, IGameState> _states;
         private IGameState _currentState;
         
         public GameStateMachine()
         {
             _states = new Dictionary<Type, IGameState>
             {
-                { typeof(BootstrapState), new BootstrapState() }
+                { typeof(BootstrapState), new BootstrapState() },
+                { typeof(LoadMainMenuState), new LoadMainMenuState() },
             };
         }
 

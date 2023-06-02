@@ -6,7 +6,7 @@ namespace EventBusModule
 {
     public class EventBus : IService
     {
-        private Dictionary<string, List<EventBusHandler>> _subscribersByEventName;
+        private readonly Dictionary<string, List<EventBusHandler>> _subscribersByEventName;
 
         public EventBus()
         {
@@ -32,12 +32,11 @@ namespace EventBusModule
 
         public void Raise(string eventName, IEventBusArgs arguments)
         {
-            if (_subscribersByEventName.TryGetValue(eventName, out var subscribers))
+            if (!_subscribersByEventName.TryGetValue(eventName, out var subscribers)) return;
+            
+            foreach (var subscriber in subscribers)
             {
-                for (int i = 0; i < subscribers.Count; i++)
-                {
-                    subscribers[i](arguments);
-                }
+                subscriber(arguments);
             }
         }
     }
