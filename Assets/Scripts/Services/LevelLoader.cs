@@ -29,29 +29,40 @@ namespace Services
 
         public void LoadLevel(IEventBusArgs e)
         {
-            Level level = _levelFactory.Create(_prefabsProvider.GetLevel(((SingleIntParameterEventBusArgs)e).Number));
-            level.StartLevel();
-            _eventBus.Raise(EventBusDefinitions.StartRaceActionKey, new EventBusArgs());
+            Level level = SpawnLevel(((SingleIntParameterEventBusArgs)e).Number);
             Car car = _carFactory.Create(level.GetPlayerPosition());
             // car.InitializeCar();
             // _eventBus.Raise(EventBusDefinitions.UpdateHealthValueActionKey, new SingleIntParameterEventBusArgs(car.CurrentHealth));
-            _serviceLocator.GetService<CameraController>().Follow(car.transform);
+            SetCamera(car);
         }
 
         public void RestartLevel(IEventBusArgs e)
         {
-            Level level = _levelFactory.CurrentLevel;
-            _eventBus.Raise(EventBusDefinitions.StartRaceActionKey, new EventBusArgs());
+            Level level = SpawnLevel(_levelFactory.CurrentLevel.GetLevelId());
+            _carFactory.Clear();
             Car car = _carFactory.Create(level.GetPlayerPosition());
             _carFactory.GetCar.Reinitialize();
             // _eventBus.Raise(EventBusDefinitions.UpdateHealthValueActionKey, new SingleIntParameterEventBusArgs(car.CurrentHealth));
-            _serviceLocator.GetService<CameraController>().Follow(car.transform);
+            SetCamera(car);
         }
 
         public void DestroyLevel(IEventBusArgs e)
         {
             _levelFactory.Remove();
             _carFactory.Clear();
+        }
+
+        private Level SpawnLevel(int levelId)
+        {
+            Level level = _levelFactory.Create(_prefabsProvider.GetLevel(levelId));
+            level.StartLevel();
+            _eventBus.Raise(EventBusDefinitions.StartRaceActionKey, new EventBusArgs());
+            return level;
+        }
+
+        private void SetCamera(Car car)
+        {
+            _serviceLocator.GetService<CameraController>().Follow(car.transform);
         }
     }
 }
