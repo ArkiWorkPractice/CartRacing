@@ -40,12 +40,15 @@ namespace CarModule.CarControl
         // additional services
         private InputService _input;
 
+        private bool _canMove;
+
         public void Initialize(CarConfig config)
         {
             _config = config;
+            _canMove = true;
             _steeringLimitCurve = new AnimationCurve(new Keyframe(_config.SteeringCurveStart.x, _config.SteeringCurveStart.y), 
                                                               new Keyframe(_config.SteeringCurveEnd.x, _config.SteeringCurveEnd.y));
-            SaveMovingData();
+            _movingData = new CarMovingData(false);
         }
 
         private void Start()
@@ -57,6 +60,10 @@ namespace CarModule.CarControl
 
         private void Update()
         {
+            if (!_canMove)
+            {
+                return;
+            }
             _currentSpeed = carRigidbody.velocity.magnitude;
             CheckInput();
             UpdateWheelMesh();
@@ -193,6 +200,14 @@ namespace CarModule.CarControl
             }
 
             carRigidbody.velocity = Vector3.zero;
+        }
+
+        public void StopCar()
+        {
+            _canMove = false;
+            _currentSpeed = 0;
+            _brakeInput = 10;
+            ApplyBrake();
         }
     }
 }
