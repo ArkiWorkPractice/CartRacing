@@ -40,7 +40,7 @@ namespace UI
             _eventBus.Subscribe<EventBusArgs>(EventBusDefinitions.ResumeGameActionKey, LoadPlayerHud);
             _eventBus.Subscribe<EventBusArgs>(EventBusDefinitions.RestartGameActionKey, LoadPlayerHud);
             _eventBus.Subscribe<SingleIntParameterEventBusArgs>(EventBusDefinitions.UpdateHealthValueActionKey, UpdateHealthValue);
-            _eventBus.Subscribe<SingleIntParameterEventBusArgs>(EventBusDefinitions.LoadLevelActionKey, UpdateHealthValue);
+            //_eventBus.Subscribe<SingleIntParameterEventBusArgs>(EventBusDefinitions.LoadLevelActionKey, UpdateHealthValue);
         }
 
         private void LoadMainMenu(IEventBusArgs e)
@@ -76,7 +76,7 @@ namespace UI
         private void LoadPauseMenu(IEventBusArgs e)
         {
             _uiDocument.visualTreeAsset = pauseAsset;
-            var visualElement = _uiDocument.rootVisualElement.Q<VisualElement>("PauseMenuWRapper");
+            var visualElement = _uiDocument.rootVisualElement.Q<VisualElement>("PauseMenuWrapper");
 
             visualElement.Q<Button>("ResumeButton").clicked += () => _eventBus.Raise(EventBusDefinitions.ResumeGameActionKey, new EventBusArgs());
             visualElement.Q<Button>("RestartButton").clicked += () => _eventBus.Raise(EventBusDefinitions.RestartGameActionKey, new EventBusArgs());

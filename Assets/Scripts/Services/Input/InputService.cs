@@ -1,4 +1,5 @@
 using System;
+using EventBusModule;
 using ServiceLocatorModule;
 using ServiceLocatorModule.Interfaces;
 using UnityEngine;
@@ -11,6 +12,7 @@ namespace Services.Input
         [SerializeField] private float smoothInputSpeed;
         
         private ControlActions _actions;
+        private EventBus _eventBus;
 
         private Vector2 _currentDirection;
         private Vector2 _directionInput;
@@ -37,8 +39,12 @@ namespace Services.Input
             SubscribePlayerInputs();
             SubscribeUIInputs();
         }
-        
-        
+
+        private void Start()
+        {
+            _eventBus = ServiceLocator.Instance.GetService<EventBus>();
+        }
+
         private void Update()
         {
             _currentDirection = Vector2.SmoothDamp(_currentDirection, _directionInput, ref _smoothDirectionInputVelocity, smoothInputSpeed);
@@ -58,6 +64,7 @@ namespace Services.Input
         private void OnEscapePerformed(InputAction.CallbackContext obj)
         {
             EscapePressed?.Invoke();
+            _eventBus.Raise(EventBusDefinitions.PauseGameActionKey, new EventBusArgs());
         }
 
         private void SubscribePlayerInputs()

@@ -10,7 +10,7 @@ using Random = UnityEngine.Random;
 
 namespace ObstacleSpawn
 {
-    public class ObstacleSpawner : MonoBehaviour
+    public class ObstacleSpawner
     {
         private readonly Obstacle[] _obstacles;
         private int _quantityForOneObject;
