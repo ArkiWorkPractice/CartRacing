@@ -1,6 +1,6 @@
 using System;
-using CarModule;
 using Obstacles.Interface;
+using CarModule;
 using UnityEngine;
 
 namespace Obstacles.Abstract
