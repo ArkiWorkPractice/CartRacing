@@ -10,7 +10,7 @@ namespace CameraLogic
     {
         [SerializeField] private CarCameraFollower cameraFollower;
 
-        private void Start()
+        private void Awake()
         {
             ServiceLocator.Instance.RegisterService(this);
         }

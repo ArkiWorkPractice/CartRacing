@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using Infrastructure.StateMachine.States;
+using UnityEditor;
 
 namespace Infrastructure.StateMachine
 {
@@ -17,12 +20,12 @@ namespace Infrastructure.StateMachine
             };
         }
 
-        public void Enter<T>() where T : IGameState
+        public async Task EnterAsync<T>() where T : IGameState
         {
             _currentState?.Exit();
 
             _currentState = _states[typeof(T)];
-            _currentState.Enter();
+            await _currentState.Enter();
         }
     }
 }

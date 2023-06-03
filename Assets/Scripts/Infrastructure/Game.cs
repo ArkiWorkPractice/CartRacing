@@ -1,17 +1,24 @@
-﻿using Infrastructure.StateMachine;
-using UnityEngine;
+﻿using System.Threading.Tasks;
+using Infrastructure.StateMachine;
+using Infrastructure.StateMachine.States;
+using ServiceLocatorModule.Interfaces;
 
 namespace Infrastructure
 {
-    public class Game : MonoBehaviour
+    public class Game : IService
     {
-        private GameStateMachine _stateMachine;
+        private readonly GameStateMachine _stateMachine;
 
-        private void Awake()
+        public Game()
         {
             _stateMachine = new GameStateMachine();
-            _stateMachine.Enter<BootstrapState>();
-            _stateMachine.Enter<LoadMainMenuState>();
         }
+
+        public async Task StartGame()
+        {
+            await _stateMachine.EnterAsync<BootstrapState>();
+            await _stateMachine.EnterAsync<LoadMainMenuState>();
+        }
+        
     }
 }

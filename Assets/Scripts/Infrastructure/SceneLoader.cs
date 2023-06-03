@@ -1,4 +1,5 @@
-﻿using UnityEngine.SceneManagement;
+﻿using System.Threading.Tasks;
+using UnityEngine.SceneManagement;
 
 namespace Infrastructure
 {
@@ -6,9 +7,11 @@ namespace Infrastructure
     {
         private const string GameScene = "Game";
 
-        public void LoadGame()
+        public async Task LoadGame()
         {
             SceneManager.LoadScene(GameScene, LoadSceneMode.Single);
+
+            await Task.CompletedTask;
         }
     }
 }
