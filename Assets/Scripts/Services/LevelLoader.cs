@@ -39,7 +39,6 @@ namespace Services
         public void RestartLevel(IEventBusArgs e)
         {
             Level level = SpawnLevel(_levelFactory.CurrentLevel.GetLevelId());
-            _carFactory.Clear();
             Car car = _carFactory.Create(level.GetPlayerPosition());
             _carFactory.GetCar.Reinitialize();
             // _eventBus.Raise(EventBusDefinitions.UpdateHealthValueActionKey, new SingleIntParameterEventBusArgs(car.CurrentHealth));
