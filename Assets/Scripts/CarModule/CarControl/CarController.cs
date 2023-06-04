@@ -44,6 +44,7 @@ namespace CarModule.CarControl
 
         public void Initialize(CarConfig config)
         {
+            _input = ServiceLocator.Instance.GetService<InputService>();
             _config = config;
             _canMove = true;
             _steeringLimitCurve = new AnimationCurve(new Keyframe(_config.SteeringCurveStart.x, _config.SteeringCurveStart.y), 
@@ -53,8 +54,6 @@ namespace CarModule.CarControl
 
         private void Start()
         {
-            _input = ServiceLocator.Instance.GetService<InputService>();
-
             carRigidbody.centerOfMass = centerOfMass.localPosition;
         }
 
@@ -204,10 +203,29 @@ namespace CarModule.CarControl
 
         public void StopCar()
         {
-            _canMove = false;
-            _currentSpeed = 0;
-            _brakeInput = 10;
-            ApplyBrake();
+            foreach (var axle in axles)
+            {
+                axle.StopWheels();
+            }
+        }
+
+        public void ChangeMovementStatus()
+        {
+            _canMove = !_canMove;
+        }
+
+        public void IsPaused()
+        {
+            if (_canMove)
+            {
+                _canMove = false;
+                carRigidbody.constraints = RigidbodyConstraints.FreezeAll;
+            }
+            else
+            {
+                _canMove = true;
+                carRigidbody.constraints = RigidbodyConstraints.None;
+            }
         }
     }
 }

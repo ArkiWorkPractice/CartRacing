@@ -103,8 +103,10 @@ namespace CarModule
 
         public void Reinitialize()
         {
-            carController.Reinitialize();
+            carSaver.Dispose();
+            StopCar();
             InitializeCar();
+            carController.Reinitialize();
         }
 
         public void ResetPosition(CarMovingData data)
@@ -114,8 +116,14 @@ namespace CarModule
             carTransform.rotation = data.Rotation;
         }
 
+        public void ReleaseCar()
+        {
+            carController.ChangeMovementStatus();
+        }
+
         public void StopCar()
         {
+            carController.ChangeMovementStatus();
             carController.StopCar();
             carController.Reinitialize();
         }
