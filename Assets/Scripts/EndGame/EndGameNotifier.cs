@@ -1,4 +1,5 @@
 using System;
+using EventBusModule;
 using ServiceLocatorModule;
 using Services;
 using UnityEngine;
@@ -9,6 +10,7 @@ namespace EndGame
     {
         private void OnTriggerExit(Collider other)
         {
+            ServiceLocator.Instance.GetService<EventBus>().Raise(EventBusDefinitions.EndGameActionKey, new EventBusArgs());
         }
     }
 }

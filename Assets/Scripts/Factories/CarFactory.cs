@@ -19,18 +19,22 @@ namespace Factories
 
         public Car Create(Transform spawnPoint)
         {
-            if (_car) return _car;
+            if (_car)
+            {
+                _car.transform.position = spawnPoint.position;
+                _car.transform.rotation = spawnPoint.rotation;
+                return _car;
+            }
             
             _car = Object.Instantiate(_carPrefab, spawnPoint);
 
             return _car;
         }
 
-        private void Clear()
+        public void Clear()
         {
-            Object.Destroy(_car.gameObject);
+            Object.Destroy(_car?.gameObject);
             _car = null;
         }
-        
     }
 }
