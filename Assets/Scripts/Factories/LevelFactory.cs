@@ -24,7 +24,7 @@ namespace Factories
 
         public void Remove()
         {
-             Object.Destroy(_currentLevel.gameObject);
+             Object.Destroy(_currentLevel?.gameObject);
             _currentLevel = null;
         }
     }

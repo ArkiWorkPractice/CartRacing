@@ -23,7 +23,12 @@ namespace Factories
 
         public Car Create(Transform spawnPoint)
         {
-            if (_car) return _car;
+            if (_car)
+            {
+                _car.transform.position = spawnPoint.position;
+                _car.transform.rotation = spawnPoint.rotation;
+                return _car;
+            }
             
             _car = Object.Instantiate(_carPrefab, spawnPoint);
             _eventBus.Subscribe<EventBusArgs>(EventBusDefinitions.EndGameActionKey, _car.StopCar);
@@ -33,9 +38,9 @@ namespace Factories
         public void Clear()
         {
             _eventBus.Unsubscribe<EventBusArgs>(EventBusDefinitions.EndGameActionKey, _car.StopCar);
-            Object.Destroy(_car.gameObject);
+            Object.Destroy(_car?.gameObject);
+            
             _car = null;
         }
-        
     }
 }
