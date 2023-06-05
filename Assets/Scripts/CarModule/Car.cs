@@ -68,7 +68,6 @@ namespace CarModule
 
         private void OnDied()
         {
-            StopCar();
             Died?.Invoke();
             _eventBus.Raise(EventBusDefinitions.EndGameActionKey, new EventBusArgs());
         }
@@ -126,6 +125,11 @@ namespace CarModule
             carController.ChangeMovementStatus();
             carController.StopCar();
             carController.Reinitialize();
+        }
+
+        public void StopCar(IEventBusArgs e)
+        {
+            StopCar();
         }
     }
 }
