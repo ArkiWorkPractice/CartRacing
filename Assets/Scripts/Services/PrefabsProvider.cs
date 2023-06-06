@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using CarModule;
 using Levels;
 using Obstacles.Abstract;
 using ScriptableObjects;
@@ -19,6 +20,8 @@ namespace Services
         public Level[] GetLevels() => prefabsContainerSo.Levels;
         public Level GetLevel(int index) => prefabsContainerSo.Levels.First(l => l.GetLevelId()==index);
         public UIController GetUIController() => prefabsContainerSo.UIPrefab;
+
+        public Car GetCarPrefab() => prefabsContainerSo.CarPrefab;
 
         private void Awake()
         {

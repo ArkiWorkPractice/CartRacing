@@ -30,15 +30,18 @@ namespace Factories
                 return _car;
             }
             
-            _car = Object.Instantiate(_carPrefab, spawnPoint);
+            _car = Object.Instantiate(_carPrefab, spawnPoint.position, spawnPoint.rotation);
             _eventBus.Subscribe<EventBusArgs>(EventBusDefinitions.EndGameActionKey, _car.StopCar);
             return _car;
         }
 
         public void Clear()
         {
+            if(!_car)
+                return;
+
             _eventBus.Unsubscribe<EventBusArgs>(EventBusDefinitions.EndGameActionKey, _car.StopCar);
-            Object.Destroy(_car?.gameObject);
+            Object.Destroy(_car.gameObject);
             
             _car = null;
         }

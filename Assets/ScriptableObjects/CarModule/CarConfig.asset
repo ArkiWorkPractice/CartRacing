@@ -43,7 +43,7 @@ MonoBehaviour:
     steeringAngle: 30
     brakeForce: 10000
     delayBetweenSaving: 2000
-    immortalTimeInMilliseconds: 5
+    immortalTimeInMilliseconds: 1
     maxHealth: 100
     directionSmoothing: 1
     turnSmoothing: 1

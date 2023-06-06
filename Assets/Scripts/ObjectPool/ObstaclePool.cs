@@ -2,11 +2,12 @@ using System;
 using System.Collections.Generic;
 using Obstacles.Abstract;
 using UnityEngine;
+using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
 
 namespace ObjectPool
 {
-    public class ObstaclePool : MonoBehaviour
+    public class ObstaclePool
     {
         private readonly Transform _parentForPoolObjects;
         private readonly Obstacle[] _obstaclePrefabs;
@@ -38,7 +39,7 @@ namespace ObjectPool
 
         private Obstacle CreateObject(int obstacleIndex)
         {
-            Obstacle obstacle = Instantiate(_obstaclePrefabs[obstacleIndex], _parentForPoolObjects);
+            Obstacle obstacle = Object.Instantiate(_obstaclePrefabs[obstacleIndex], _parentForPoolObjects);
             obstacle.gameObject.SetActive(false);
 
             return obstacle;

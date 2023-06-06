@@ -9,20 +9,27 @@ namespace Infrastructure.StateMachine.States
 {
     public class LoadMainMenuState : IGameState
     {
+        private EventBus _eventBus;
+        
         public async Task Enter()
         {
-            var eventBus = ServiceLocator.Instance.GetService<EventBus>();
-            var prefabsProvider = ServiceLocator.Instance.GetService<PrefabsProvider>();
-            
-            UIController uiController = Object.Instantiate(prefabsProvider.GetUIController());
-            Object.DontDestroyOnLoad(uiController);
-            ServiceLocator.Instance.RegisterService(uiController);
-            uiController.Initialize();
-            eventBus.Raise(EventBusDefinitions.LoadMainMenuActionKey, new EventBusArgs());
+            _eventBus = ServiceLocator.Instance.GetService<EventBus>();
+
+            GenerateUI();
             
             await Task.CompletedTask;
         }
 
+        private void GenerateUI()
+        {
+            var prefabsProvider = ServiceLocator.Instance.GetService<PrefabsProvider>();
+            
+            UIController uiController = Object.Instantiate(prefabsProvider.GetUIController());
+            ServiceLocator.Instance.RegisterService(uiController);
+            uiController.Initialize();
+            _eventBus.Raise(EventBusDefinitions.LoadMainMenuActionKey, new EventBusArgs());
+        }
+        
         public void Exit()
         {
             

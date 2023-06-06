@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace Infrastructure
@@ -10,9 +9,8 @@ namespace Infrastructure
 
         public async Task LoadGame()
         {
-            AsyncOperation operation = SceneManager.LoadSceneAsync(GameScene, LoadSceneMode.Single);
-            
-            
+            SceneManager.LoadScene(GameScene, LoadSceneMode.Additive);
+
             await Task.CompletedTask;
         }
     }

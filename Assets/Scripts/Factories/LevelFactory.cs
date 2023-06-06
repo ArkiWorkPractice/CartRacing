@@ -1,5 +1,4 @@
 using Levels;
-using ServiceLocatorModule.Interfaces;
 using UnityEngine;
 
 namespace Factories
@@ -12,10 +11,8 @@ namespace Factories
 
         public Level Create(Level levelPrefab)
         {
-            if (_currentLevel!= null)
-            {
-                Remove();
-            }
+            Remove();
+
             _currentLevel = Object.Instantiate(levelPrefab);
             _currentLevel.transform.position = Vector3.zero;
 
@@ -24,7 +21,10 @@ namespace Factories
 
         public void Remove()
         {
-             Object.Destroy(_currentLevel?.gameObject);
+            if (!_currentLevel)
+                return;
+
+            Object.Destroy(_currentLevel.gameObject);
             _currentLevel = null;
         }
     }
