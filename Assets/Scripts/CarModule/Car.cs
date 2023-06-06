@@ -3,7 +3,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using CarModule.CarComponents;
 using CarModule.CarControl;
+using EventBusModule;
+using EventBusModule.Interfaces;
 using Models.CarModule;
+using ServiceLocatorModule;
 using UnityEngine;
 
 namespace CarModule
@@ -18,22 +21,13 @@ namespace CarModule
         private CarConfig _config;
         private IDamageable _damageable;
         private Health _health;
+        private EventBus _eventBus;
 
         private bool _isImmortal;
         private float _currentImmortalTime;
 
         public event Action<int> HealthChanged;
         public event Action Died;
-
-
-        private void Start()
-        {
-            InitializeCar();
-
-            _isImmortal = false;
-            carSaver.Initialize(this, _config.DelayBetweenSaving);
-            carSaver.StartSaving();
-        }
 
         private void Update()
         {
@@ -50,7 +44,7 @@ namespace CarModule
             }
         }
 
-        private void InitializeCar()
+        public void InitializeCar()
         {
             _config = carConfigSo.GetConfig();
 
@@ -60,16 +54,22 @@ namespace CarModule
 
             _damageable = new SimpleDamageable(_health);
             carController.Initialize(_config);
+            _eventBus = ServiceLocator.Instance.GetService<EventBus>();
+            _isImmortal = false;
+            carSaver.Initialize(this, _config.DelayBetweenSaving);
+            carSaver.StartSaving();
         }
 
         private void OnHealthChanged(int value)
         {
             HealthChanged?.Invoke(value);
+            _eventBus.Raise( EventBusDefinitions.UpdateHealthValueActionKey, new SingleIntParameterEventBusArgs(_health.CurrentHealth));
         }
 
         private void OnDied()
         {
             Died?.Invoke();
+            _eventBus.Raise(EventBusDefinitions.EndGameActionKey, new EventBusArgs());
         }
 
         public void MakeDamage(int damage)
@@ -102,6 +102,8 @@ namespace CarModule
 
         public void Reinitialize()
         {
+            carSaver.Dispose();
+            StopCar();
             InitializeCar();
             carController.Reinitialize();
         }
@@ -111,6 +113,23 @@ namespace CarModule
             var carTransform = transform;
             carTransform.position = data.Position;
             carTransform.rotation = data.Rotation;
+        }
+
+        public void ReleaseCar()
+        {
+            carController.ChangeMovementStatus();
+        }
+
+        public void StopCar()
+        {
+            carController.ChangeMovementStatus();
+            carController.StopCar();
+            carController.Reinitialize();
+        }
+
+        public void StopCar(IEventBusArgs e)
+        {
+            StopCar();
         }
     }
 }

@@ -1,4 +1,6 @@
 ﻿using System;
+using EventBusModule;
+using ServiceLocatorModule;
 using UnityEngine;
 
 namespace CarModule.CarComponents
@@ -9,6 +11,8 @@ namespace CarModule.CarComponents
         private readonly int _maxHealth;
         private int _currentHealth;
 
+        public int CurrentHealth => _currentHealth;
+
         public event Action<int> HealthValueChanged;
         public event Action Died;
 
@@ -16,6 +20,7 @@ namespace CarModule.CarComponents
         {
             _maxHealth = maxHealth;
             _currentHealth = _maxHealth;
+            
         }
         
         public Health(int maxHealth, int currentHealth)
@@ -26,16 +31,17 @@ namespace CarModule.CarComponents
 
         public void DecreaseHealth(int valueToSubtract)
         {
-            if (valueToSubtract > _currentHealth)
+            if (valueToSubtract >= _currentHealth)
             {
                 _currentHealth = MinHealth;
+                HealthValueChanged?.Invoke(_currentHealth);
                 Died?.Invoke();
+                return;
             }
             else
             {
                 _currentHealth -= valueToSubtract;
             }
-            Debug.Log(_currentHealth);
             HealthValueChanged?.Invoke(_currentHealth);   
         }
 

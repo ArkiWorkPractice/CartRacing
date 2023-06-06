@@ -49,10 +49,16 @@ namespace Models.CarModule
             leftWheelCollider.brakeTorque = configHandbrakeForce * brakeMultiplier;
             rightWheelCollider.brakeTorque = configHandbrakeForce * brakeMultiplier;
         }
-
+        
         public bool IsGrounded()
         {
             return leftWheelCollider.isGrounded && rightWheelCollider.isGrounded;
+        }
+        
+        public void StopWheels()
+        {
+            leftWheelCollider.brakeTorque = Mathf.Infinity;
+            rightWheelCollider.brakeTorque = Mathf.Infinity;
         }
     }
 }

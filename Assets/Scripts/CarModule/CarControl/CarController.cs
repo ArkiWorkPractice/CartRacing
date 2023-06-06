@@ -40,23 +40,29 @@ namespace CarModule.CarControl
         // additional services
         private InputService _input;
 
+        private bool _canMove;
+
         public void Initialize(CarConfig config)
         {
+            _input = ServiceLocator.Instance.GetService<InputService>();
             _config = config;
+            _canMove = true;
             _steeringLimitCurve = new AnimationCurve(new Keyframe(_config.SteeringCurveStart.x, _config.SteeringCurveStart.y), 
                                                               new Keyframe(_config.SteeringCurveEnd.x, _config.SteeringCurveEnd.y));
-            SaveMovingData();
+            _movingData = new CarMovingData(false);
         }
 
         private void Start()
         {
-            _input = ServiceLocator.Instance.GetService<InputService>();
-
             carRigidbody.centerOfMass = centerOfMass.localPosition;
         }
 
         private void Update()
         {
+            if (!_canMove)
+            {
+                return;
+            }
             _currentSpeed = carRigidbody.velocity.magnitude;
             CheckInput();
             UpdateWheelMesh();
@@ -193,6 +199,33 @@ namespace CarModule.CarControl
             }
 
             carRigidbody.velocity = Vector3.zero;
+        }
+
+        public void StopCar()
+        {
+            foreach (var axle in axles)
+            {
+                axle.StopWheels();
+            }
+        }
+
+        public void ChangeMovementStatus()
+        {
+            _canMove = !_canMove;
+        }
+
+        public void IsPaused()
+        {
+            if (_canMove)
+            {
+                _canMove = false;
+                carRigidbody.constraints = RigidbodyConstraints.FreezeAll;
+            }
+            else
+            {
+                _canMove = true;
+                carRigidbody.constraints = RigidbodyConstraints.None;
+            }
         }
     }
 }
