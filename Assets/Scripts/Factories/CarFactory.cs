@@ -1,4 +1,6 @@
 ﻿using CarModule;
+using EventBusModule;
+using ServiceLocatorModule;
 using ServiceLocatorModule.Interfaces;
 using UnityEngine;
 
@@ -9,28 +11,36 @@ namespace Factories
         private readonly Car _carPrefab;
         
         private Car _car;
+        private EventBus _eventBus;
         
         public Car GetCar => _car;
         
         public CarFactory(Car carPrefab)
         {
             _carPrefab = carPrefab;
+            _eventBus = ServiceLocator.Instance.GetService<EventBus>();
         }
 
         public Car Create(Transform spawnPoint)
         {
-            if (_car) return _car;
+            if (_car)
+            {
+                _car.transform.position = spawnPoint.position;
+                _car.transform.rotation = spawnPoint.rotation;
+                return _car;
+            }
             
             _car = Object.Instantiate(_carPrefab, spawnPoint);
-
+            _eventBus.Subscribe<EventBusArgs>(EventBusDefinitions.EndGameActionKey, _car.StopCar);
             return _car;
         }
 
-        private void Clear()
+        public void Clear()
         {
-            Object.Destroy(_car.gameObject);
+            _eventBus.Unsubscribe<EventBusArgs>(EventBusDefinitions.EndGameActionKey, _car.StopCar);
+            Object.Destroy(_car?.gameObject);
+            
             _car = null;
         }
-        
     }
 }

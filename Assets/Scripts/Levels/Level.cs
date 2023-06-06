@@ -19,6 +19,5 @@ namespace Levels
         {
             _obstacleSpawner = new ObstacleSpawner(spawnPoints);
         }
-
     }
 }

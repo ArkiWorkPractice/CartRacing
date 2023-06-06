@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: CarConfig
   m_EditorClassIdentifier: 
   carConfig:
-    maxMotorTorque: 10000
+    maxMotorTorque: 5000
     steeringCurve:
       serializedVersion: 2
       m_Curve:
@@ -41,7 +41,7 @@ MonoBehaviour:
     steeringCurveStart: {x: 0, y: 1}
     steeringCurveEnd: {x: 1, y: 0.5}
     steeringAngle: 30
-    brakeForce: 50000
+    brakeForce: 10000
     delayBetweenSaving: 2000
     immortalTimeInMilliseconds: 5
     maxHealth: 100

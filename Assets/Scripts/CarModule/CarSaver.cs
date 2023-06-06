@@ -17,6 +17,8 @@ namespace CarModule
         private Coroutine _saverCoroutine;
         private bool _savingInProcess;
 
+        private InputService _inputService;
+
         private void OnDisable()
         {
             StopSaving();
@@ -28,21 +30,22 @@ namespace CarModule
             _delayBetweenSaving = delayBetweenSaving;
             _savingInProcess = false;
             _lastPosition = _car.GetMovingData();
+            _inputService = ServiceLocator.Instance.GetService<InputService>();
 
-            ServiceLocator.Instance.GetService<InputService>().RespawnClicked += RestoreData;
+            _inputService.RespawnClicked += RestoreData;
         }
 
-        public void RestoreData()
+        private void RestoreData()
         {
-            _car.Reinitialize();
-            _car.ResetPosition(_lastPosition);
-            _car.Reinitialize();
-            
+            StartCoroutine(RespawnCar());
+
             Debug.Log("restored");
         }
 
         public void StartSaving()
         {
+            if (_savingInProcess) return;
+            
             _savingInProcess = true;
             _saverCoroutine = StartCoroutine(Saving());
         }
@@ -71,6 +74,20 @@ namespace CarModule
                 var delay = _delayBetweenSaving / 1000f;
                 yield return new WaitForSeconds(delay);
             }
+        }
+
+        private IEnumerator RespawnCar()
+        {
+            _car.StopCar();
+            _car.ResetPosition(_lastPosition);
+            yield return new WaitForSeconds(0.5f);
+            _car.ReleaseCar();
+        }
+
+        public void Dispose()
+        {
+            _inputService.RespawnClicked -= RestoreData;
+            StopSaving();
         }
     }
 }

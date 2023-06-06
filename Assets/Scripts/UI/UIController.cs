@@ -41,7 +41,7 @@ namespace UI
             _eventBus.Subscribe<EventBusArgs>(EventBusDefinitions.ResumeGameActionKey, LoadPlayerHud);
             _eventBus.Subscribe<EventBusArgs>(EventBusDefinitions.RestartGameActionKey, LoadPlayerHud);
             _eventBus.Subscribe<SingleIntParameterEventBusArgs>(EventBusDefinitions.UpdateHealthValueActionKey, UpdateHealthValue);
-            _eventBus.Subscribe<SingleIntParameterEventBusArgs>(EventBusDefinitions.LoadLevelActionKey, UpdateHealthValue);
+            //_eventBus.Subscribe<SingleIntParameterEventBusArgs>(EventBusDefinitions.LoadLevelActionKey, UpdateHealthValue);
         }
 
         private void LoadMainMenu(IEventBusArgs e)
