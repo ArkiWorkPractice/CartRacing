@@ -11,7 +11,7 @@ namespace Factories
         private readonly Car _carPrefab;
         
         private Car _car;
-        private EventBus _eventBus;
+        private readonly EventBus _eventBus;
         
         public Car GetCar => _car;
         
