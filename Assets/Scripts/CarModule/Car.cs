@@ -26,6 +26,8 @@ namespace CarModule
         private bool _isImmortal;
         private float _currentImmortalTime;
 
+        public int CurrentHealth => _health.CurrentHealth;
+        
         public event Action<int> HealthChanged;
         public event Action Died;
 

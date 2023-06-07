@@ -1,8 +1,11 @@
-﻿using Infrastructure.StateMachine;
+﻿using System.Threading.Tasks;
+using Infrastructure.StateMachine;
+using Infrastructure.StateMachine.States;
+using ServiceLocatorModule.Interfaces;
 
 namespace Infrastructure
 {
-    public class Game
+    public class Game : IService
     {
         private readonly GameStateMachine _stateMachine;
 
@@ -11,9 +14,11 @@ namespace Infrastructure
             _stateMachine = new GameStateMachine();
         }
 
-        public void Start()
+        public async Task StartGame()
         {
-            _stateMachine.Enter<BootstrapState>();
+            await _stateMachine.EnterAsync<BootstrapState>();
+            await _stateMachine.EnterAsync<LoadMainMenuState>();
         }
+        
     }
 }

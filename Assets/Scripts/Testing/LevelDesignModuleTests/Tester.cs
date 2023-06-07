@@ -30,7 +30,7 @@ namespace Testing.LevelDesignModuleTests
             CarFactory factory = new CarFactory(carPrefab);
             ServiceLocator.Instance.RegisterService(factory);
             ServiceLocator.Instance.RegisterService(new ObstacleFactory(prefabsProvider.GetObstacles(), configsProvider.ObstacleSpawnerConfig.QuantityForEachObject));
-
+            
             _levelLoader = new LevelLoader();
             ServiceLocator.Instance.RegisterService(_levelLoader);
 

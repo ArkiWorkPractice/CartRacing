@@ -1,7 +1,8 @@
+using EventBusModule;
+using Infrastructure.StateMachine;
 using ServiceLocatorModule;
 using Services;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace Infrastructure
 {
@@ -11,20 +12,24 @@ namespace Infrastructure
         [SerializeField] private ConfigsProvider configsProvider;
         [SerializeField] private PrefabsProvider prefabsProvider;
 
-        [SerializeField] private string gameScene;
-
         private Game _game;
 
-        private void Awake()
+        private async void Awake()
         {
             DontDestroyOnLoad(this);
+            
+            RegisterServices();
 
+            await _game.StartGame();
+        }
+
+        private void RegisterServices()
+        {
             ServiceLocator.Instance.RegisterService(configsProvider);
             ServiceLocator.Instance.RegisterService(prefabsProvider);
 
             _game = new Game();
-
-            SceneManager.LoadScene(gameScene);
+            ServiceLocator.Instance.RegisterService(_game);
         }
     }
 }

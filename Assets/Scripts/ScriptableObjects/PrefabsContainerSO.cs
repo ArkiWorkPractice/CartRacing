@@ -1,5 +1,7 @@
-﻿using Levels;
+﻿using CarModule;
+using Levels;
 using Obstacles.Abstract;
+using UI;
 using UnityEngine;
 
 namespace ScriptableObjects
@@ -10,8 +12,13 @@ namespace ScriptableObjects
         public Obstacle[] Obstacles => obstacles;
 
         public Level[] Levels => levels;
+        
+        public UIController UIPrefab => uiController;
+        public Car CarPrefab => carPrefab;
 
         [SerializeField] private Obstacle[] obstacles;
         [SerializeField] private Level[] levels;
+        [SerializeField] private UIController uiController;
+        [SerializeField] private Car carPrefab;
     }
 }

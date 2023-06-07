@@ -4,7 +4,6 @@ using EventBusModule;
 using EventBusModule.Interfaces;
 using Factories;
 using Levels;
-using ObstacleSpawn;
 using ServiceLocatorModule;
 using ServiceLocatorModule.Interfaces;
 
@@ -31,8 +30,8 @@ namespace Services
         {
             Level level = SpawnLevel(((SingleIntParameterEventBusArgs)e).Number);
             Car car = _carFactory.Create(level.GetPlayerPosition());
-            // car.InitializeCar();
-            // _eventBus.Raise(EventBusDefinitions.UpdateHealthValueActionKey, new SingleIntParameterEventBusArgs(car.CurrentHealth));
+            car.InitializeCar();
+            _eventBus.Raise(EventBusDefinitions.UpdateHealthValueActionKey, new SingleIntParameterEventBusArgs(car.CurrentHealth));
             SetCamera(car);
         }
 
@@ -40,8 +39,8 @@ namespace Services
         {
             Level level = SpawnLevel(_levelFactory.CurrentLevel.GetLevelId());
             Car car = _carFactory.Create(level.GetPlayerPosition());
-            _carFactory.GetCar.Reinitialize();
-            // _eventBus.Raise(EventBusDefinitions.UpdateHealthValueActionKey, new SingleIntParameterEventBusArgs(car.CurrentHealth));
+            car.Reinitialize();
+            _eventBus.Raise(EventBusDefinitions.UpdateHealthValueActionKey, new SingleIntParameterEventBusArgs(car.CurrentHealth));
             SetCamera(car);
         }
 

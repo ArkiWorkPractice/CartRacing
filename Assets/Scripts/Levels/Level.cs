@@ -10,6 +10,7 @@ namespace Levels
         [SerializeField] private int levelId;
         [SerializeField] private ObstacleSpawnPoint[] spawnPoints;
         [SerializeField] private Transform playerSpawnPosition;
+        
         private ObstacleSpawner _obstacleSpawner;
         public int GetLevelId() => levelId;
         public Transform GetPlayerPosition() => playerSpawnPosition;
